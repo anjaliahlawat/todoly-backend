@@ -1,5 +1,6 @@
 const express = require('Express')
 const users = require('../routes/users')
+const auth = require('../routes/auth')
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
@@ -8,5 +9,6 @@ module.exports = function(app) {
     next()
   })
   app.use(express.json())
-  app.use('/api/user', users)
+  app.use('/api/register', users)
+  app.use('/api/auth', auth)
 }
