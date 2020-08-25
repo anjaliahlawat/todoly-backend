@@ -5,19 +5,23 @@ const capturedTaskSchema = new mongoose.Schema({
   desc : {
     type :String,
     required : true,
-    minlength : 3,
+    minlength : 1,
     maxlength : 200
   },
   category : {
     type :String,
     required : true,
-    minlength : 3,
+    minlength : 1,
     maxlength : 100
   },
   date : {
     type: Date, 
     required: true,
     default: Date.now
+  },
+  user : {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }
 })
 
@@ -25,8 +29,9 @@ const CapturedTask = mongoose.model('CapturedTask', capturedTaskSchema)
 
 function validateTask(task){
   const schema = {
-    desc : Joi.string().min(3).max(200).required(),
-    category : Joi.string().min(3).max(100).required()
+    desc : Joi.string().min(1).max(200).required(),
+    category : Joi.string().min(1).max(100).required(),
+    date : Joi.string().max(100)
   }
 
   return Joi.validate(task, schema)

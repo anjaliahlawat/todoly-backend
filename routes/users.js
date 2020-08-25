@@ -26,11 +26,11 @@ router.post('/', asyncMiddleware(async (req, res) => {
 
       const salt = await bcrypt.genSalt(10)
       user.password = await bcrypt.hash(user.password, salt)
-    user = await user.save();
-    res.send({
-      result : 'success',
-      user : user
-    })    
+      user = await user.save();
+      res.send({
+        result : 'success',
+        user : user
+      })    
 }))
 
 module.exports = router;
