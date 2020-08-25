@@ -9,6 +9,7 @@ router.get('/', asyncMiddleware(async  (req, res) => {
 }))
 
 router.post('/', asyncMiddleware(async (req, res) => {
+
   const { error } = validate(req.body)
   if(error) return res.status(400).send(error.details[0].message)
 
@@ -20,8 +21,7 @@ router.post('/', asyncMiddleware(async (req, res) => {
       { 
         name: req.body.name,
         email: req.body.email,
-        password : req.body.password,
-        phoneNo : req.body.phoneNo
+        password : req.body.password
       })
 
       const salt = await bcrypt.genSalt(10)
@@ -29,7 +29,7 @@ router.post('/', asyncMiddleware(async (req, res) => {
       user = await user.save();
       res.send({
         result : 'success',
-        user : user
+        user : _.pick(user, ['_id', 'name', 'email'])
       })    
 }))
 

@@ -17,7 +17,7 @@ router.post('/', asyncMiddleware(async (req, res) => {
 
   res.send({
     result : 'success',
-    user : user
+    user : _.pick(user, ['_id', 'name', 'email'])
   })    
 }))
 
