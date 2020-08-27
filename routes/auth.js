@@ -4,6 +4,7 @@ const asyncMiddleware = require('../middleware/async')
 const bcrypt = require('bcrypt')
 const { User} = require('../modals/users')
 const Joi = require('joi')
+const _ = require('lodash')
 
 router.post('/', asyncMiddleware(async (req, res) => {
   const { error } = validate(req.body);

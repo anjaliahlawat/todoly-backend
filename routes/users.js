@@ -3,6 +3,7 @@ const router = express.Router()
 const bcrypt = require('bcrypt')
 const asyncMiddleware = require('../middleware/async')
 const { User, validate} = require('../modals/users')
+const _ = require('lodash')
 
 router.get('/', asyncMiddleware(async  (req, res) => {
   res.send("hi")
