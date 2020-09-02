@@ -2,6 +2,7 @@ const express = require('Express')
 const users = require('../routes/users')
 const auth = require('../routes/auth')
 const captureTask = require('../routes/captureTask')
+const organizeTask = require('../routes/organizeTask')
 
 
 module.exports = function(app) {
@@ -14,4 +15,5 @@ module.exports = function(app) {
   app.use('/api/register', users)
   app.use('/api/auth', auth)
   app.use('/api/captured', captureTask)
+  app.use('/api/organize', organizeTask)
 }

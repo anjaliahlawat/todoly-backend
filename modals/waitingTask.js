@@ -21,9 +21,9 @@ const waitingTaskSchema = new mongoose.Schema({
 
 const WaitingTask = mongoose.model('WaitingTask', waitingTaskSchema)
 
-function validateWaiitngTask(task){
+function validateWaitngTask(task){
   const schema = {
-    desc : Joi.string().min(1).max(200).required()
+    desc : Joi.string().min(1).max(200).required(),
     date : Joi.string().max(100)
   }
 
@@ -31,4 +31,4 @@ function validateWaiitngTask(task){
 }
 
 exports.WaitingTask = WaitingTask
-exports.validate = validateWaiitngTask
+exports.validateWaitngTask = validateWaitngTask

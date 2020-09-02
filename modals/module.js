@@ -25,4 +25,4 @@ function validateModule(module){
 }
 
 exports.Module = Module
-exports.validate = validateModule
+exports.validateModule = validateModule

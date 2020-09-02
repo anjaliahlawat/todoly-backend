@@ -32,8 +32,7 @@ router.post('/create', asyncMiddleware(async (req, res) => {
   let response = {
     result : 'success',
     data : savedTasks
-  }
-  
+  }  
   res.send(response)
 }))
 
@@ -51,7 +50,10 @@ router.post('/delete', asyncMiddleware(async(req, res) => {
   const task = await CapturedTask.findByIdAndRemove(task_id)
 
   if(!task) return res.status(404).send("Not found")  
-  res.send(_.pick(task, ['_id', 'desc', 'category', 'date']))
+  let response = {
+    result : 'success'
+  }
+  res.send(response)
 }))
 
 module.exports = router;

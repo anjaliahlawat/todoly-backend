@@ -33,7 +33,7 @@ const Task = mongoose.model('Task', taskSchema)
 
 function validateTask(task){
   const schema = {
-    desc : Joi.string().min(1).max(200).required()
+    desc : Joi.string().min(1).max(200).required(),
     date : Joi.string().max(100)
   }
 
@@ -41,4 +41,4 @@ function validateTask(task){
 }
 
 exports.Task = Task
-exports.validate = validateTask
+exports.validateTask = validateTask

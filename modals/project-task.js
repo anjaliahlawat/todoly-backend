@@ -5,7 +5,7 @@ const project_taskSchema = new mongoose.Schema({
   task : {
     type: mongoose.Schema.Types.ObjectId,
     task: 'Task'
-  }
+  },
   project : {
     type: mongoose.Schema.Types.ObjectId,
     project: 'Project'
