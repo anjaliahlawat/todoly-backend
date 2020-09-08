@@ -24,8 +24,24 @@ const taskSchema = new mongoose.Schema({
      type: String,
      default: 'Progress'
   },
+  category : {
+    type :String,
+    required : true,
+    minlength : 1,
+    maxlength : 100
+  },
   date : {
-    type: Date
+    type: Date,
+    default: Date.now, 
+    required : true
+  },
+  finish_date: {
+    type: Date,
+    required : true
+  },
+  user : {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }
 })
 
@@ -34,7 +50,8 @@ const Task = mongoose.model('Task', taskSchema)
 function validateTask(task){
   const schema = {
     desc : Joi.string().min(1).max(200).required(),
-    date : Joi.string().max(100)
+    date : Joi.string().max(100),
+    finish_date : Joi.string().max(100)
   }
 
   return Joi.validate(task, schema)

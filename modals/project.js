@@ -18,6 +18,14 @@ const projectSchema = new mongoose.Schema({
      type: String,
      default: 'In Progress'
   },
+  isAwaited : {
+    type: Boolean,
+    default: false
+  },
+  isLater : {
+     type: Boolean,
+     default: false
+  },
   date : {
     type: Date,
     required: true,

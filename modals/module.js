@@ -8,10 +8,18 @@ const moduleSchema = new mongoose.Schema({
     minlength : 3,
     maxlength : 100
   },
+  isAwaited: {
+      type: Boolean,
+      default: false
+  },
+  isLater : {
+      type: Boolean,
+      default: false
+ },
   project : {
     type: mongoose.Schema.Types.ObjectId,
     project: 'Project'
-  }
+  },
 })
 
 const Module = mongoose.model('Module', moduleSchema)

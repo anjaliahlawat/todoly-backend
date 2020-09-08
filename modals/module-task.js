@@ -6,9 +6,9 @@ const module_taskSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     module: 'Module'
   },
-  project : {
+  task : {
     type: mongoose.Schema.Types.ObjectId,
-    project: 'Project'
+    task: 'task'
   }
 })
 
