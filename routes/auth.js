@@ -1,20 +1,20 @@
 const express = require('express')
 const router = express.Router()
 const asyncMiddleware = require('../middleware/async')
-const bcrypt = require('bcrypt')
-const { User} = require('../modals/users')
 const Joi = require('joi')
 const _ = require('lodash')
 
+const UserClass = require('../classes/UserClass')
+let userObj = new UserClass()
+
 router.post('/', asyncMiddleware(async (req, res) => {
-  const { error } = validate(req.body);
+  const { error } = validate(req.body)
   if(error) return res.status(400).send(error.details[0].message)
 
-  let user = await User.findOne({ email: req.body.email })
+  const {email, password} = req.body
+ 
+  let user = await userObj.loginUser(email, password)
   if(!user) return res.status(400).send('Invalid email or password')
-
-  const validPassword = bcrypt.compare(req.body.password, user.password)
-  if(!validPassword) return res.status(400).send('Invalid email or password')
 
   res.send({
     result : 'success',

@@ -1,0 +1,8 @@
+class CapturedTaskClass {
+  constructor(){
+
+  }
+  createTask(){
+    
+  }
+}
