@@ -16,7 +16,7 @@ router.post('/create', asyncMiddleware(async (req, res) => {
      res.send('error')
   }
 
-  let user = await userObj.isUserNew(email)
+  let user = await userObj.getUserId(email)
   let savedTasks = await capturedObj.createTask(user, tasks)
   
   let response = {
@@ -27,7 +27,7 @@ router.post('/create', asyncMiddleware(async (req, res) => {
 }))
 
 router.post('/list', asyncMiddleware(async (req, res) => {
-  let user = await userObj.isUserNew(req.body.user)
+  let user = await userObj.getUserId(req.body.user)
   let tasks = await capturedObj.getAllTasks(user)
   
   res.send(tasks)     

@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 
 class UserClass {
   async createUser(name, email, password){
-    if(this.isUserNew(email)){
+    if(this.getUserId(email)){
       let user = new User({ 
         name: name,
         email: email,
@@ -22,7 +22,7 @@ class UserClass {
     }
     else return null
   }
-  async isUserNew(email){
+  async getUserId(email){
     try {
       return await User.findOne({ email: req.body.email })
     } catch (error) {
@@ -31,7 +31,7 @@ class UserClass {
   }
   async loginUser(email, password){
     try {
-      const user = await User.findOne({ email: email })
+      const user = await this.getUserId(email)
       if(!user) return null
 
       const validPassword = bcrypt.compare(password, user.password)

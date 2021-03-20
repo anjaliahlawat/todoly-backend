@@ -8,12 +8,6 @@ const projectSchema = new mongoose.Schema({
     minlength : 1,
     maxlength : 200
   },
-  category: {
-    type :String,
-    required : true,
-    minlength : 1,
-    maxlength : 100
-  },
   status: {
      type: String,
      default: 'In Progress'
@@ -42,7 +36,6 @@ const Project = mongoose.model('Project', projectSchema)
 function validateProject(project){
   const schema = {
     desc : Joi.string().min(1).max(200).required(),
-    category : Joi.string().min(1).max(100).required(),
     date : Joi.string().max(100)
   }
 
