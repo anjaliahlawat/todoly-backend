@@ -8,12 +8,6 @@ const capturedTaskSchema = new mongoose.Schema({
     minlength : 1,
     maxlength : 200
   },
-  category : {
-    type :String,
-    required : true,
-    minlength : 1,
-    maxlength : 100
-  },
   date : {
     type: Date, 
     required: true,
