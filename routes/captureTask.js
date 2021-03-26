@@ -1,48 +1,58 @@
-const express = require('express')
-const router = express.Router()
-const asyncMiddleware = require('../middleware/async')
-const _ = require('lodash')
-const UserClass = require('../classes/UserClass')
-const CapturedTaskClass = require('../classes/CapturedClass')
+const express = require("express");
 
-const userObj = new UserClass()
-const capturedObj = new CapturedTaskClass()
+const router = express.Router();
+const _ = require("lodash");
+const asyncMiddleware = require("../middleware/async");
+const UserClass = require("../classes/UserClass");
+const CapturedTaskClass = require("../classes/CapturedClass");
 
-router.post('/create', asyncMiddleware(async (req, res) => {
-  let {user : email, tasks} = req.body
-  tasks = JSON.parse(tasks)
-  
-  if(!email){
-     res.send('error')
-  }
+const userObj = new UserClass();
+const capturedObj = new CapturedTaskClass();
 
-  let user = await userObj.getUserId(email)
-  let savedTasks = await capturedObj.createTask(user, tasks)
-  
-  let response = {
-    result : 'success',
-    data : savedTasks
-  }  
-  res.send(response)
-}))
+router.post(
+  "/create",
+  asyncMiddleware(async (req, res) => {
+    let { user: email, tasks } = req.body;
+    tasks = JSON.parse(tasks);
 
-router.post('/list', asyncMiddleware(async (req, res) => {
-  let user = await userObj.getUserId(req.body.user)
-  let tasks = await capturedObj.getAllTasks(user)
-  
-  res.send(tasks)     
-}))
+    if (!email) {
+      res.send("error");
+    }
 
-router.post('/delete', asyncMiddleware(async(req, res) => {
-  let {task_id} = req.body
-  
-  let task = await capturedObj.deleteTask(task_id)
+    const user = await userObj.getUserId(email);
+    const savedTasks = await capturedObj.createTask(user, tasks);
 
-  if(!task) return res.status(404).send("Not found")  
-  let response = {
-    result : 'success'
-  }
-  res.send(response)
-}))
+    const response = {
+      result: "success",
+      data: savedTasks,
+    };
+    res.send(response);
+  })
+);
+
+router.post(
+  "/list",
+  asyncMiddleware(async (req, res) => {
+    const user = await userObj.getUserId(req.body.user);
+    const tasks = await capturedObj.getAllTasks(user);
+
+    res.send(tasks);
+  })
+);
+
+router.post(
+  "/delete",
+  asyncMiddleware(async (req, res) => {
+    const { task_id } = req.body;
+
+    const task = await capturedObj.deleteTask(task_id);
+
+    if (!task) return res.status(404).send("Not found");
+    const response = {
+      result: "success",
+    };
+    res.send(response);
+  })
+);
 
 module.exports = router;

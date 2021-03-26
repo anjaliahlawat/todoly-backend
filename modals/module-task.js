@@ -1,16 +1,16 @@
-const mongoose = require('mongoose')
-const Joi = require('joi')
+const mongoose = require("mongoose");
+const Joi = require("joi");
 
 const module_taskSchema = new mongoose.Schema({
-  module : {
+  module: {
     type: mongoose.Schema.Types.ObjectId,
-    module: 'Module'
+    module: "Module",
   },
-  task : {
+  task: {
     type: mongoose.Schema.Types.ObjectId,
-    task: 'task'
-  }
-})
+    task: "task",
+  },
+});
 
-const Module_task = mongoose.model('Module_task', module_taskSchema)
-exports.Module_task = Module_task
+const Module_task = mongoose.model("Module_task", module_taskSchema);
+exports.Module_task = Module_task;

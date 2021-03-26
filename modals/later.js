@@ -1,34 +1,34 @@
-const mongoose = require('mongoose')
-const Joi = require('joi')
+const mongoose = require("mongoose");
+const Joi = require("joi");
 
 const laterTasksSchema = new mongoose.Schema({
-  desc : {
-    type :String,
-    required : true,
-    minlength : 1,
-    maxlength : 200
+  desc: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 200,
   },
-  date : {
+  date: {
     type: Date,
     required: true,
-    default: Date.now
+    default: Date.now,
   },
-  user : {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }
-})
+    ref: "User",
+  },
+});
 
-const LaterTasks = mongoose.model('LaterTasks', laterTasksSchema)
+const LaterTasks = mongoose.model("LaterTasks", laterTasksSchema);
 
-function validateLaterTasks(tasks){
+function validateLaterTasks(tasks) {
   const schema = {
-    desc : Joi.string().min(1).max(200).required(),
-    date : Joi.string().max(100)
-  }
+    desc: Joi.string().min(1).max(200).required(),
+    date: Joi.string().max(100),
+  };
 
-  return Joi.validate(tasks, schema)
+  return Joi.validate(tasks, schema);
 }
 
-exports.LaterTasks = LaterTasks
-exports.validateLaterTasks = validateLaterTasks
+exports.LaterTasks = LaterTasks;
+exports.validateLaterTasks = validateLaterTasks;

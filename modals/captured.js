@@ -1,35 +1,35 @@
-const mongoose = require('mongoose')
-const Joi = require('joi')
+const mongoose = require("mongoose");
+const Joi = require("joi");
 
 const capturedTaskSchema = new mongoose.Schema({
-  desc : {
-    type :String,
-    required : true,
-    minlength : 1,
-    maxlength : 200
-  },
-  date : {
-    type: Date, 
+  desc: {
+    type: String,
     required: true,
-    default: Date.now
+    minlength: 1,
+    maxlength: 200,
   },
-  user : {
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }
-})
+    ref: "User",
+  },
+});
 
-const CapturedTask = mongoose.model('CapturedTask', capturedTaskSchema)
+const CapturedTask = mongoose.model("CapturedTask", capturedTaskSchema);
 
-function validateTask(task){
+function validateTask(task) {
   const schema = {
-    desc : Joi.string().min(1).max(200).required(),
-    category : Joi.string().min(1).max(100).required(),
-    date : Joi.string().max(100)
-  }
+    desc: Joi.string().min(1).max(200).required(),
+    category: Joi.string().min(1).max(100).required(),
+    date: Joi.string().max(100),
+  };
 
-  return Joi.validate(task, schema)
+  return Joi.validate(task, schema);
 }
 
-exports.CapturedTask = CapturedTask
-exports.validate = validateTask
+exports.CapturedTask = CapturedTask;
+exports.validate = validateTask;

@@ -1,16 +1,16 @@
-const mongoose = require('mongoose')
-const Joi = require('joi')
+const mongoose = require("mongoose");
+const Joi = require("joi");
 
 const project_taskSchema = new mongoose.Schema({
-  task : {
+  task: {
     type: mongoose.Schema.Types.ObjectId,
-    task: 'Task'
+    task: "Task",
   },
-  project : {
+  project: {
     type: mongoose.Schema.Types.ObjectId,
-    project: 'Project'
-  }
-})
+    project: "Project",
+  },
+});
 
-const Project_task = mongoose.model('Project_task', project_taskSchema)
-exports.Project_task = Project_task
+const Project_task = mongoose.model("Project_task", project_taskSchema);
+exports.Project_task = Project_task;

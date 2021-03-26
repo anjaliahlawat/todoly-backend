@@ -1,55 +1,55 @@
-const mongoose = require('mongoose')
-const Joi = require('joi')
+const mongoose = require("mongoose");
+const Joi = require("joi");
 
 const taskSchema = new mongoose.Schema({
-  desc : {
-    type :String,
-    required : true,
-    minlength : 1,
-    maxlength : 200
+  desc: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 200,
   },
-  isProject : {
-     type : Boolean,
-     default : false
+  isProject: {
+    type: Boolean,
+    default: false,
   },
-  isLater : {
-    type : Boolean,
-    default : false
+  isLater: {
+    type: Boolean,
+    default: false,
   },
   isAwaited: {
-    type : Boolean,
-    default : false
+    type: Boolean,
+    default: false,
   },
   status: {
-     type: String,
-     default: 'Progress'
+    type: String,
+    default: "Progress",
   },
-  date : {
+  date: {
     type: Date,
-    default: Date.now, 
-    required : true
+    default: Date.now,
+    required: true,
   },
   finish_date: {
     type: Date,
-    required : true
+    required: true,
   },
-  user : {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }
-})
+    ref: "User",
+  },
+});
 
-const Task = mongoose.model('Task', taskSchema)
+const Task = mongoose.model("Task", taskSchema);
 
-function validateTask(task){
+function validateTask(task) {
   const schema = {
-    desc : Joi.string().min(1).max(200).required(),
-    date : Joi.string().max(100),
-    finish_date : Joi.string().max(100)
-  }
+    desc: Joi.string().min(1).max(200).required(),
+    date: Joi.string().max(100),
+    finish_date: Joi.string().max(100),
+  };
 
-  return Joi.validate(task, schema)
+  return Joi.validate(task, schema);
 }
 
-exports.Task = Task
-exports.validateTask = validateTask
+exports.Task = Task;
+exports.validateTask = validateTask;

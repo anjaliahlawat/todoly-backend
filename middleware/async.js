@@ -1,11 +1,10 @@
-module.exports = function (handler){
+module.exports = function (handler) {
   return async (req, res, next) => {
-    try{
-      res.header("Access-Control-Allow-Origin", "*")
-      await handler(req, res)
+    try {
+      res.header("Access-Control-Allow-Origin", "*");
+      await handler(req, res);
+    } catch (ex) {
+      next(ex);
     }
-    catch(ex){
-      next(ex)
-    }
-  }
-}
+  };
+};

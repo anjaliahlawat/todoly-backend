@@ -1,17 +1,17 @@
-const mongoose = require('mongoose')
-const Joi = require('joi')
+const mongoose = require("mongoose");
+const Joi = require("joi");
 
 const waitingTaskSchema = new mongoose.Schema({
-  task : {
+  task: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Task'
+    ref: "Task",
   },
-  waitingList : {
+  waitingList: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'WaitingList'
-  }
-})
+    ref: "WaitingList",
+  },
+});
 
-const WaitingTask = mongoose.model('WaitingTask', waitingTaskSchema)
+const WaitingTask = mongoose.model("WaitingTask", waitingTaskSchema);
 
-exports.WaitingTask = WaitingTask
+exports.WaitingTask = WaitingTask;

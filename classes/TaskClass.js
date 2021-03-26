@@ -1,26 +1,22 @@
 class TaskClass {
-  async createTask(task, project=false, user){
+  async createTask(task, project = false, user) {
     try {
-      let task = new Task({
-        desc : task.desc,
-        category : category,
-        isProject : project,
-        finish_date : task.finish_date,
-        user : user
-      })
-      return await task.save() 
+      const task = new Task({
+        desc: task.desc,
+        category,
+        isProject: project,
+        finish_date: task.finish_date,
+        user,
+      });
+      return await task.save();
     } catch (error) {
-      console.log(error) 
-    }   
+      console.log(error);
+    }
   }
 
-  async editTask(){
+  async editTask() {}
 
-  }
-
-  async deleteTask(){
-
-  }
+  async deleteTask() {}
 }
 
-module.exports = TaskClass
+module.exports = TaskClass;
