@@ -8,7 +8,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "echo Anjali"
+      "pre-commit": "echo committing",
+      "commit-msg": "commitlint --edit $HUSKY_GIT_PARAMS"
     }
   },
   "author": "Anjali Ahlawat",
