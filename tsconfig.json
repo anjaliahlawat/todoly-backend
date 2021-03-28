@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "outDir": "./build",
+        "allowJs": true,
+        "target": "es6",
+        "moduleResolution": "node",
+    },
+    "include": [
+        "./classes/*",
+        "./startup/*",
+        "./modals/*",
+        "./config/*",
+        "./middleware"
+    ],
+    "exclude": [
+        "node_modules",
+        "webpack.config.js"
+    ]
+}

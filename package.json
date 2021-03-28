@@ -4,35 +4,42 @@
   "description": "Todoly app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "./node_modules/.bin/eslint .",
+    "lint:fix": "./node_modules/.bin/eslint . --fix"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "echo committing",
+      "pre-commit": "npm run lint",
       "commit-msg": "commitlint --edit $HUSKY_GIT_PARAMS"
     }
   },
   "author": "Anjali Ahlawat",
   "license": "ISC",
   "dependencies": {
+    "awesome-typescript-loader": "^5.2.1",
     "bcrypt": "^5.0.0",
     "config": "^3.3.1",
     "express": "^4.17.1",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
-    "mongoose": "^5.9.7"
+    "mongoose": "^5.9.7",
+    "source-map-loader": "^2.0.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.0.1",
     "@commitlint/config-conventional": "^12.0.1",
+    "@types/express": "^4.16.1",
+    "@types/node": "^14.14.37",
     "eslint": "^7.22.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1",
     "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.1",
+    "husky": "^4.3.8",
     "prettier": "^2.2.1",
-    "husky": "^4.3.8"
+    "typescript": "^3.3.3"
   }
 }
