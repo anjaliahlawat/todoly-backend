@@ -1,22 +1,20 @@
+import { Task } from "../modals/task";
+
 class TaskClass {
   async createTask(task, project = false, user) {
     try {
-      const task = new Task({
+      const taskObj = new Task({
         desc: task.desc,
-        category,
         isProject: project,
         finish_date: task.finish_date,
         user,
       });
-      return await task.save();
+      return await taskObj.save();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
+    return true;
   }
-
-  async editTask() {}
-
-  async deleteTask() {}
 }
 
-module.exports = TaskClass;
+export default TaskClass;

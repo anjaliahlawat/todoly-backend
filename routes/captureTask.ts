@@ -19,14 +19,17 @@ router.post(
       res.send("error");
     }
 
-    const user = await userObj.getUserId(email);
-    const savedTasks = await capturedObj.createTask(user, tasks);
-
-    const response = {
-      result: "success",
-      data: savedTasks,
-    };
-    res.send(response);
+    try {
+      const user = await userObj.getUserId(email);
+      const savedTasks = await capturedObj.createTask(user, tasks);
+      const response = {
+        result: "success",
+        data: savedTasks,
+      };
+      res.send(response);
+    } catch (error) {
+      res.status(400).send(error);
+    }
   })
 );
 

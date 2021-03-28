@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+import mongoose from "mongoose";
+import Joi from "joi";
 
 const projectSchema = new mongoose.Schema({
   desc: {
@@ -42,5 +42,4 @@ function validateProject(project) {
   return Joi.validate(project, schema);
 }
 
-exports.Project = Project;
-exports.validateProject = validateProject;
+export { Project, validateProject };

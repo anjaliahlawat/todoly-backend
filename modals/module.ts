@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+import * as mongoose from "mongoose";
+import * as Joi from "joi";
 
 const moduleSchema = new mongoose.Schema({
   name: {
@@ -32,5 +32,4 @@ function validateModule(module) {
   return Joi.validate(module, schema);
 }
 
-exports.Module = Module;
-exports.validateModule = validateModule;
+export { Module, validateModule };

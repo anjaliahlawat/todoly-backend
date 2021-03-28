@@ -31,5 +31,4 @@ function validateTask(task) {
   return Joi.validate(task, schema);
 }
 
-exports.CapturedTask = CapturedTask;
-exports.validate = validateTask;
+export { CapturedTask, validateTask };

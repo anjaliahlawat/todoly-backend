@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+import * as mongoose from "mongoose";
+import * as Joi from "joi";
 
 const taskSchema = new mongoose.Schema({
   desc: {
@@ -51,5 +51,4 @@ function validateTask(task) {
   return Joi.validate(task, schema);
 }
 
-exports.Task = Task;
-exports.validateTask = validateTask;
+export { Task, validateTask };

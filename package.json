@@ -8,12 +8,7 @@
     "lint": "./node_modules/.bin/eslint .",
     "lint:fix": "./node_modules/.bin/eslint . --fix"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint",
-      "commit-msg": "commitlint --edit $HUSKY_GIT_PARAMS"
-    }
-  },
+  
   "author": "Anjali Ahlawat",
   "license": "ISC",
   "dependencies": {

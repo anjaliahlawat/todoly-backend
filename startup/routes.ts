@@ -1,8 +1,8 @@
-const express = require("Express");
+var express = require("express");
 const users = require("../routes/users");
 const auth = require("../routes/auth");
-const captureTask = require("../routes/captureTask");
-const organizeTask = require("../routes/organizeTask");
+// const captureTask = require("../routes/captureTask");
+// const organizeTask = require("../routes/organizeTask");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -16,6 +16,6 @@ module.exports = function (app) {
   app.use(express.json());
   app.use("/api/register", users);
   app.use("/api/auth", auth);
-  app.use("/api/captured", captureTask);
-  app.use("/api/organize", organizeTask);
+  // app.use("/api/captured", captureTask);
+  // app.use("/api/organize", organizeTask);
 };
