@@ -3,11 +3,16 @@ const WARNING = 1;
 const ERROR = 2;
 
 module.exports = {
-  extends: ["airbnb-base", "plugin:prettier/recommended"],
-  plugins: ["prettier"],
+  extends: [
+    "airbnb-base",
+    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended",
+  ],
+  plugins: ["prettier", "@typescript-eslint"],
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 9,
-    project: "./tsconfig.json",
+    // project: "./tsconfig.json",
   },
   env: {
     node: true,
