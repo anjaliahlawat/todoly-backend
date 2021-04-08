@@ -41,7 +41,7 @@ const taskSchema = new mongoose.Schema({
 
 const Task = mongoose.model("Task", taskSchema);
 
-function validateTask(task) {
+function validateTask(task: typeof taskSchema): Joi.object {
   const schema = {
     desc: Joi.string().min(1).max(200).required(),
     date: Joi.string().max(100),

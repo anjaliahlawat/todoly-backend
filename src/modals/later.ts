@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+import * as mongoose from "mongoose";
+import * as Joi from "joi";
 
 const laterTasksSchema = new mongoose.Schema({
   desc: {
@@ -21,7 +21,7 @@ const laterTasksSchema = new mongoose.Schema({
 
 const LaterTasks = mongoose.model("LaterTasks", laterTasksSchema);
 
-function validateLaterTasks(tasks) {
+function validateLaterTasks(tasks: typeof laterTasksSchema): Joi.object {
   const schema = {
     desc: Joi.string().min(1).max(200).required(),
     date: Joi.string().max(100),
@@ -30,5 +30,4 @@ function validateLaterTasks(tasks) {
   return Joi.validate(tasks, schema);
 }
 
-exports.LaterTasks = LaterTasks;
-exports.validateLaterTasks = validateLaterTasks;
+export { LaterTasks, validateLaterTasks };

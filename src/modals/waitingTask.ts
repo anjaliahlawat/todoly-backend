@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+import * as mongoose from "mongoose";
 
 const waitingTaskSchema = new mongoose.Schema({
   task: {
@@ -14,4 +13,4 @@ const waitingTaskSchema = new mongoose.Schema({
 
 const WaitingTask = mongoose.model("WaitingTask", waitingTaskSchema);
 
-exports.WaitingTask = WaitingTask;
+export default WaitingTask;

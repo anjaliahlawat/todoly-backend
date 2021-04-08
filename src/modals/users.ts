@@ -42,7 +42,7 @@ userSchema.methods.getAuthToken = function getAuthToken(): string {
   return token;
 };
 
-function validateUser(user: typeof userSchema):  {
+function validateUser(user: typeof userSchema): Joi.object {
   const schema = {
     username: Joi.string().min(5).max(50).required(),
     email: Joi.string().min(10).max(255).required(),

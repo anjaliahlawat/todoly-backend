@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+import * as mongoose from "mongoose";
+import * as Joi from "joi";
 
 const waitingListSchema = new mongoose.Schema({
   reason: {
@@ -20,7 +20,7 @@ const waitingListSchema = new mongoose.Schema({
 
 const WaitingList = mongoose.model("WaitingList", waitingListSchema);
 
-function validateWaitingList(task) {
+function validateWaitingList(task: typeof waitingListSchema): Joi.object {
   const schema = {
     desc: Joi.string().min(1).max(200).required(),
     date: Joi.string().max(100),

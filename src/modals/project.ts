@@ -33,7 +33,7 @@ const projectSchema = new mongoose.Schema({
 
 const Project = mongoose.model("Project", projectSchema);
 
-function validateProject(project) {
+function validateProject(project: typeof projectSchema): Joi.object {
   const schema = {
     desc: Joi.string().min(1).max(200).required(),
     date: Joi.string().max(100),

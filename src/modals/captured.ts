@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+import * as mongoose from "mongoose";
+import * as Joi from "joi";
 
 const capturedTaskSchema = new mongoose.Schema({
   desc: {
@@ -21,7 +21,7 @@ const capturedTaskSchema = new mongoose.Schema({
 
 const CapturedTask = mongoose.model("CapturedTask", capturedTaskSchema);
 
-function validateTask(task) {
+function validateTask(task: typeof capturedTaskSchema): Joi.object {
   const schema = {
     desc: Joi.string().min(1).max(200).required(),
     category: Joi.string().min(1).max(100).required(),

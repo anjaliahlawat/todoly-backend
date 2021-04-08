@@ -24,7 +24,7 @@ const moduleSchema = new mongoose.Schema({
 
 const Module = mongoose.model("Module", moduleSchema);
 
-function validateModule(module) {
+function validateModule(module: typeof moduleSchema): Joi.object {
   const schema = {
     name: Joi.string().min(3).max(100).required(),
   };
