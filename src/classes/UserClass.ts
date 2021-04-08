@@ -2,7 +2,7 @@ import * as bcrypt from "bcrypt";
 import { User, userSchema, validateUser } from "../modals/users";
 
 class UserClass {
-  async createUser(userData: typeof userSchema): Promise<void> {
+  async createUser(userData: typeof userSchema): Promise<typeof userSchema> {
     const { error } = validateUser(userData);
     let user: typeof userSchema = {};
     if (error) throw error.details[0].message;
