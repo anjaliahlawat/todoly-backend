@@ -1,8 +1,13 @@
 import * as _ from "lodash";
 import { CapturedTask, validateTask } from "../modals/captured";
+import { taskSchema } from "../modals/task";
+import { userSchema } from "../modals/users";
 
 class CapturedTaskClass {
-  async createTask(user, tasks) {
+  async createTask(
+    user: typeof userSchema,
+    tasks: typeof taskSchema
+  ): Promise<typeof taskSchema> {
     try {
       const savedTasks = [];
       for (let i = 0; i < tasks.length; i += 1) {
@@ -20,26 +25,30 @@ class CapturedTaskClass {
       return savedTasks;
     } catch (error) {
       // console.log(error);
+      return 0;
     }
-    return true;
   }
 
-  async getAllTasks(user) {
+  async getAllTasks(user: typeof userSchema): Promise<typeof taskSchema> {
     try {
-      const tasks = await CapturedTask.find({ user });
-      for (let i = 0; i < tasks.length; i += 1) {
-        tasks[i] = _.pick(tasks[i], ["_id", "desc", "category", "date"]);
+      const tasksStoredInDB = await CapturedTask.find({ user });
+      const tasks = [];
+      for (let i = 0; i < tasksStoredInDB.length; i += 1) {
+        tasks.push(
+          _.pick(tasksStoredInDB[i], ["_id", "desc", "category", "date"])
+        );
       }
+      return tasks;
     } catch (error) {
       // console.log(error);
+      return 0;
     }
-    return true;
   }
 
-  async deleteTask(taskId) {
+  async deleteTask(taskId: string): Promise<typeof taskSchema> {
     const task = await CapturedTask.findByIdAndRemove(taskId);
     return task;
   }
 }
 
-module.exports = CapturedTaskClass;
+export default CapturedTaskClass;

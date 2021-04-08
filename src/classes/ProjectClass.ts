@@ -1,14 +1,19 @@
 import ModuleClass from "./ModuleClass";
 import TaskClass from "./TaskClass";
-import { Project } from "../modals/project";
+import { Project, projectSchema } from "../modals/project";
 
 import ProjectTask from "../modals/project-task";
+import { taskSchema } from "../modals/task";
+import { userSchema } from "../modals/users";
 
 const moduleObj = new ModuleClass();
 const taskObj = new TaskClass();
 
 class ProjectClass {
-  async createProject(project, userId) {
+  async createProject(
+    project: typeof projectSchema,
+    userId: string
+  ): Promise<typeof projectSchema> {
     try {
       let projectObj = new Project({
         desc: project.desc,
@@ -19,11 +24,14 @@ class ProjectClass {
       return projectObj;
     } catch (error) {
       // console.log(error);
+      return 0;
     }
-    return true;
   }
 
-  async addTask(task, user) {
+  async addTask(
+    task: typeof taskSchema,
+    user: typeof userSchema
+  ): Promise<typeof taskSchema> {
     try {
       let savedTask = {};
       if (task.module) {
@@ -41,8 +49,8 @@ class ProjectClass {
       return savedTask;
     } catch (error) {
       // console.log(error);
+      return 0;
     }
-    return true;
   }
 }
 
