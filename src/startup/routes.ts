@@ -1,10 +1,8 @@
 import { json as expressJson } from "express";
-import users from "../routes/users";
-import auth from "../routes/auth";
-// const captureTask = require("../routes/captureTask");
-// const organizeTask = require("../routes/organizeTask");
+import * as users from "../routes/users";
+import * as auth from "../routes/auth";
 
-module.exports = function (app) {
+const configRoutes = (app): void => {
   app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
@@ -19,3 +17,5 @@ module.exports = function (app) {
   // app.use("/api/captured", captureTask);
   // app.use("/api/organize", organizeTask);
 };
+
+export default configRoutes;

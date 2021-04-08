@@ -22,8 +22,9 @@ router.post(
         user: _.pick(user, ["_id", "username", "phoneNumber", "email"]),
       });
     } catch (error) {
-      res.status(400).send(error);
+      return res.status(400).send(error);
     }
+    return 0;
   })
 );
 
