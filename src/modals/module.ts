@@ -32,4 +32,4 @@ function validateModule(module: typeof moduleSchema): Joi.object {
   return Joi.validate(module, schema);
 }
 
-export { Module, validateModule };
+export { Module, moduleSchema, validateModule };

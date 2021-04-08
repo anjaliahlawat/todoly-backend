@@ -51,4 +51,4 @@ function validateTask(task: typeof taskSchema): Joi.object {
   return Joi.validate(task, schema);
 }
 
-export { Task, validateTask };
+export { Task, taskSchema, validateTask };

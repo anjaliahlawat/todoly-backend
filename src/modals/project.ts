@@ -42,4 +42,4 @@ function validateProject(project: typeof projectSchema): Joi.object {
   return Joi.validate(project, schema);
 }
 
-export { Project, validateProject };
+export { Project, projectSchema, validateProject };

@@ -29,5 +29,4 @@ function validateWaitingList(task: typeof waitingListSchema): Joi.object {
   return Joi.validate(task, schema);
 }
 
-exports.WaitingList = WaitingList;
-exports.validateWaitingList = validateWaitingList;
+export { WaitingList, waitingListSchema, validateWaitingList };
