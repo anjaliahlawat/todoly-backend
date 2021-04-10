@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
-        "outDir": "./build",
-        "allowJs": true,
-        "target": "es6",
+        "module": "commonjs",
         "moduleResolution": "node",
+        "outDir": "./build",
+        "target": "ES2018",
     },
     "include": [
         "src/",
