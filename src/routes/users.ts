@@ -1,7 +1,5 @@
-import { Router } from "express";
-import { get as getConfigVar } from "config";
-import _ from "lodash";
-import { jwt as jwtSign } from "jsonwebtoken";
+import { Request, Response, Router } from "express";
+import * as _ from "lodash";
 
 import asyncMiddleware from "../middleware/async";
 import UserClass from "../classes/UserClass";
@@ -11,21 +9,18 @@ const userObj = new UserClass();
 
 router.post(
   "/",
-  asyncMiddleware(async (req, res) => {
-    try {
-      const user = await userObj.createUser(req.body);
-      if (!user) return res.status(400).send("User already registered");
-
-      const token = jwtSign({ _id: user._id }, getConfigVar("jwtPrivateKey"));
-
-      res.header("x-auth-token", token).send({
-        user: _.pick(user, ["_id", "username", "phoneNumber", "email"]),
-      });
-    } catch (error) {
-      return res.status(400).send(error);
+  asyncMiddleware(
+    async (req: Request, res: Response): Promise<Response> => {
+      if (!(await userObj.getUserId(req.body.email))) {
+        const user = await userObj.createUser(req.body);
+        const token = user.getAuthToken();
+        return res.header("x-auth-token", token).send({
+          user: _.pick(user, ["_id", "username", "phoneNumber", "email"]),
+        });
+      }
+      return res.status(400).send("User already registered");
     }
-    return 0;
-  })
+  )
 );
 
 module.exports = router;

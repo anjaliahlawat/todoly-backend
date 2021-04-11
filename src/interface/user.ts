@@ -6,6 +6,7 @@ interface User {
   password: string;
   date: Date;
   getAuthToken: () => string;
+  save: () => any;
 }
 
 export default User;
