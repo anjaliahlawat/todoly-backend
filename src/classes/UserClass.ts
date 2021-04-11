@@ -1,14 +1,15 @@
 import * as bcrypt from "bcrypt";
-import { User, userSchema, validateUser } from "../modals/users";
+import User from "../interface/user";
+import { User as UserModal, userSchema, validateUser } from "../modals/users";
 
 class UserClass {
-  async createUser(userData: typeof userSchema): Promise<typeof userSchema> {
+  async createUser(userData: User): Promise<User> {
     const { error } = validateUser(userData);
     let user: typeof userSchema = {};
     if (error) throw error.details[0].message;
 
     if (!(await this.getUserId(userData.email))) {
-      user = new User({
+      user = new UserModal({
         username: userData.username,
         phoneNumber: userData.phoneNumber,
         email: userData.email,
@@ -26,8 +27,8 @@ class UserClass {
     return user;
   }
 
-  getUserId(email: string): { email; password } {
-    return User.findOne({ email });
+  getUserId(email: string): User {
+    return UserModal.findOne({ email });
   }
 
   async loginUser(email: string, password: string): Promise<string> {
@@ -39,7 +40,7 @@ class UserClass {
       const validPassword = bcrypt.compare(password, user.password);
       if (!validPassword) return null;
 
-      token = User.getAuthToken();
+      token = user.getAuthToken();
     } catch (error) {
       // console.log(error);
     }

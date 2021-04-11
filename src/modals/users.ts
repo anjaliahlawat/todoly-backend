@@ -35,12 +35,12 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model("User", userSchema);
-
-userSchema.methods.getAuthToken = function getAuthToken(): string {
+userSchema.methods.getAuthToken = function (): string {
   const token = jwt.sign({ _id: this._id }, config.get("jwtPrivateKey"));
   return token;
 };
+
+const User = mongoose.model("User", userSchema);
 
 function validateUser(user: typeof userSchema): Joi.object {
   const schema = {
