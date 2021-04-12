@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
-import Joi from "joi";
+import { Schema, model } from "mongoose";
+import { validate, object as JoiObject, string } from "joi";
 
-const projectSchema = new mongoose.Schema({
+const projectSchema = new Schema({
   desc: {
     type: String,
     required: true,
@@ -26,20 +26,20 @@ const projectSchema = new mongoose.Schema({
     default: Date.now,
   },
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
   },
 });
 
-const Project = mongoose.model("Project", projectSchema);
+const Project = model("Project", projectSchema);
 
-function validateProject(project: typeof projectSchema): Joi.object {
+function validateProject(project: typeof projectSchema): JoiObject {
   const schema = {
-    desc: Joi.string().min(1).max(200).required(),
-    date: Joi.string().max(100),
+    desc: string().min(1).max(200).required(),
+    date: string().max(100),
   };
 
-  return Joi.validate(project, schema);
+  return validate(project, schema);
 }
 
 export { Project, projectSchema, validateProject };

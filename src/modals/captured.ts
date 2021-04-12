@@ -1,7 +1,7 @@
-import * as mongoose from "mongoose";
-import * as Joi from "joi";
+import { Schema, model } from "mongoose";
+import { validate, object as JoiObject, string } from "joi";
 
-const capturedTaskSchema = new mongoose.Schema({
+const capturedTaskSchema = new Schema({
   desc: {
     type: String,
     required: true,
@@ -14,21 +14,21 @@ const capturedTaskSchema = new mongoose.Schema({
     default: Date.now,
   },
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
   },
 });
 
-const CapturedTask = mongoose.model("CapturedTask", capturedTaskSchema);
+const CapturedTask = model("CapturedTask", capturedTaskSchema);
 
-function validateTask(task: typeof capturedTaskSchema): Joi.object {
+function validateTask(task: typeof capturedTaskSchema): JoiObject {
   const schema = {
-    desc: Joi.string().min(1).max(200).required(),
-    category: Joi.string().min(1).max(100).required(),
-    date: Joi.string().max(100),
+    desc: string().min(1).max(200).required(),
+    category: string().min(1).max(100).required(),
+    date: string().max(100),
   };
 
-  return Joi.validate(task, schema);
+  return validate(task, schema);
 }
 
 export { CapturedTask, validateTask };

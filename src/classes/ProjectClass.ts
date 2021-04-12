@@ -1,7 +1,6 @@
 import ModuleClass from "./ModuleClass";
 import TaskClass from "./TaskClass";
 import { Project, projectSchema } from "../modals/project";
-
 import ProjectTask from "../modals/project-task";
 import { taskSchema } from "../modals/task";
 import { userSchema } from "../modals/users";

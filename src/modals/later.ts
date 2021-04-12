@@ -1,7 +1,7 @@
-import * as mongoose from "mongoose";
-import * as Joi from "joi";
+import { Schema, model } from "mongoose";
+import { validate, object as JoiObject, string } from "joi";
 
-const laterTasksSchema = new mongoose.Schema({
+const laterTasksSchema = new Schema({
   desc: {
     type: String,
     required: true,
@@ -14,20 +14,20 @@ const laterTasksSchema = new mongoose.Schema({
     default: Date.now,
   },
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
   },
 });
 
-const LaterTasks = mongoose.model("LaterTasks", laterTasksSchema);
+const LaterTasks = model("LaterTasks", laterTasksSchema);
 
-function validateLaterTasks(tasks: typeof laterTasksSchema): Joi.object {
+function validateLaterTasks(tasks: typeof laterTasksSchema): JoiObject {
   const schema = {
-    desc: Joi.string().min(1).max(200).required(),
-    date: Joi.string().max(100),
+    desc: string().min(1).max(200).required(),
+    date: string().max(100),
   };
 
-  return Joi.validate(tasks, schema);
+  return validate(tasks, schema);
 }
 
 export { LaterTasks, validateLaterTasks };

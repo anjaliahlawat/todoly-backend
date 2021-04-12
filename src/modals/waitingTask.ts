@@ -1,16 +1,16 @@
-import * as mongoose from "mongoose";
+import { Schema, model } from "mongoose";
 
-const waitingTaskSchema = new mongoose.Schema({
+const waitingTaskSchema = new Schema({
   task: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Task",
   },
   waitingList: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "WaitingList",
   },
 });
 
-const WaitingTask = mongoose.model("WaitingTask", waitingTaskSchema);
+const WaitingTask = model("WaitingTask", waitingTaskSchema);
 
 export default WaitingTask;

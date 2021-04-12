@@ -1,4 +1,4 @@
-import * as bcrypt from "bcrypt";
+import { compare, genSalt, hash } from "bcrypt";
 import User from "../interface/user";
 import { User as UserModal, validateUser } from "../modals/users";
 
@@ -14,8 +14,8 @@ class UserClass {
       password: userData.password,
     });
 
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
+    const salt = await genSalt(10);
+    user.password = await hash(user.password, salt);
     return user.save();
   }
 
@@ -29,7 +29,7 @@ class UserClass {
       const user = await this.getUserId(email);
       if (!user) return null;
 
-      const validPassword = bcrypt.compare(password, user.password);
+      const validPassword = compare(password, user.password);
       if (!validPassword) return null;
 
       token = user.getAuthToken();

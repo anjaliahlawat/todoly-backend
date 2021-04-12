@@ -1,7 +1,7 @@
-import * as mongoose from "mongoose";
-import * as Joi from "joi";
+import { Schema, model } from "mongoose";
+import { validate, object as JoiObject, string } from "joi";
 
-const waitingListSchema = new mongoose.Schema({
+const waitingListSchema = new Schema({
   reason: {
     type: String,
     required: true,
@@ -13,20 +13,20 @@ const waitingListSchema = new mongoose.Schema({
     required: true,
   },
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
   },
 });
 
-const WaitingList = mongoose.model("WaitingList", waitingListSchema);
+const WaitingList = model("WaitingList", waitingListSchema);
 
-function validateWaitingList(task: typeof waitingListSchema): Joi.object {
+function validateWaitingList(task: typeof waitingListSchema): JoiObject {
   const schema = {
-    desc: Joi.string().min(1).max(200).required(),
-    date: Joi.string().max(100),
+    desc: string().min(1).max(200).required(),
+    date: string().max(100),
   };
 
-  return Joi.validate(task, schema);
+  return validate(task, schema);
 }
 
 export { WaitingList, waitingListSchema, validateWaitingList };

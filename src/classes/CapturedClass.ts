@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import { pick } from "lodash";
 import { CapturedTask, validateTask } from "../modals/captured";
 import { taskSchema } from "../modals/task";
 import { userSchema } from "../modals/users";
@@ -35,7 +35,7 @@ class CapturedTaskClass {
       const tasks = [];
       for (let i = 0; i < tasksStoredInDB.length; i += 1) {
         tasks.push(
-          _.pick(tasksStoredInDB[i], ["_id", "desc", "category", "date"])
+          pick(tasksStoredInDB[i], ["_id", "desc", "category", "date"])
         );
       }
       return tasks;

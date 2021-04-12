@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import * as _ from "lodash";
+import { pick } from "lodash";
 
 import asyncMiddleware from "../middleware/async";
 import UserClass from "../classes/UserClass";
@@ -15,7 +15,7 @@ router.post(
         const user = await userObj.createUser(req.body);
         const token = user.getAuthToken();
         return res.header("x-auth-token", token).send({
-          user: _.pick(user, ["_id", "username", "phoneNumber", "email"]),
+          user: pick(user, ["_id", "username", "phoneNumber", "email"]),
         });
       }
       return res.status(400).send("User already registered");

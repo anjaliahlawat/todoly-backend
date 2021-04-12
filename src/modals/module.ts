@@ -1,7 +1,7 @@
-import * as mongoose from "mongoose";
-import * as Joi from "joi";
+import { Schema, model } from "mongoose";
+import { validate, object as JoiObject, string } from "joi";
 
-const moduleSchema = new mongoose.Schema({
+const moduleSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -17,19 +17,19 @@ const moduleSchema = new mongoose.Schema({
     default: false,
   },
   project: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     project: "Project",
   },
 });
 
-const Module = mongoose.model("Module", moduleSchema);
+const Module = model("Module", moduleSchema);
 
-function validateModule(module: typeof moduleSchema): Joi.object {
+function validateModule(module: typeof moduleSchema): JoiObject {
   const schema = {
-    name: Joi.string().min(3).max(100).required(),
+    name: string().min(3).max(100).required(),
   };
 
-  return Joi.validate(module, schema);
+  return validate(module, schema);
 }
 
 export { Module, moduleSchema, validateModule };

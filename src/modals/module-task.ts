@@ -1,16 +1,16 @@
-import * as mongoose from "mongoose";
+import { Schema, model } from "mongoose";
 
-const moduleTaskSchema = new mongoose.Schema({
+const moduleTaskSchema = new Schema({
   module: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     module: "Module",
   },
   task: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     task: "task",
   },
 });
 
-const ModuleTask = mongoose.model("ModuleTask", moduleTaskSchema);
+const ModuleTask = model("ModuleTask", moduleTaskSchema);
 
 export default ModuleTask;
