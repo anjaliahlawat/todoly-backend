@@ -1,40 +1,31 @@
-import { Module, moduleSchema } from "../modals/module";
-import ModuleTask from "../modals/module-task";
-import { projectSchema } from "../modals/project";
-import { taskSchema } from "../modals/task";
+import { Module as ModuleModal } from "../modals/module";
+// import ModuleTask from "../modals/module-task";
+import Task from "../interface/task";
+import Module from "../interface/module";
+import Project from "../interface/project";
+import User from "../interface/user";
 import TaskClass from "./TaskClass";
 
 const taskObj = new TaskClass();
 
 class ModuleClass {
-  async createModule(
-    module: typeof moduleSchema,
-    project: typeof projectSchema
-  ): Promise<typeof moduleSchema> {
-    try {
-      const moduleObj = new Module({
-        name: module.name,
-        project,
-      });
-      return await moduleObj.save();
-    } catch (error) {
-      // console.log(error);
-      return 0;
-    }
+  async createModule(module: Module, project: Project): Promise<Module> {
+    const moduleObj = new ModuleModal({
+      name: module.name,
+      project,
+    });
+    return moduleObj.save();
   }
 
-  async addTask(
-    task: typeof taskSchema,
-    user: typeof taskSchema
-  ): Promise<typeof taskSchema> {
+  async addTask(task: Task, user: User): Promise<Task> {
     const savedTask = await taskObj.createTask(task, true, user);
 
-    const moduleTaskObj = new ModuleTask({
-      module: task.module_id,
-      task: savedTask._id,
-    });
+    // const moduleTaskObj = new ModuleTask({
+    //   module: task.module_id,
+    //   task: savedTask._id,
+    // });
 
-    await moduleTaskObj.save();
+    // await moduleTaskObj.save();
     return savedTask;
   }
 }
