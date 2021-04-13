@@ -9,6 +9,8 @@ interface Task {
   finishDate: Date;
   moduleId: string;
   projectId: string;
+  type: string;
+  img: string;
   save: () => any;
 }
 

@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import { validate, object as JoiObject, string } from "joi";
+import Task from "../interface/task";
 
 const capturedTaskSchema = new Schema({
   desc: {
@@ -13,6 +14,10 @@ const capturedTaskSchema = new Schema({
     required: true,
     default: Date.now,
   },
+  type: {
+    type: String,
+    required: true,
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -21,11 +26,10 @@ const capturedTaskSchema = new Schema({
 
 const CapturedTask = model("CapturedTask", capturedTaskSchema);
 
-function validateTask(task: typeof capturedTaskSchema): JoiObject {
+function validateTask(task: Task): JoiObject {
   const schema = {
     desc: string().min(1).max(200).required(),
-    category: string().min(1).max(100).required(),
-    date: string().max(100),
+    type: string().required(),
   };
 
   return validate(task, schema);

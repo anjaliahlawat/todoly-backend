@@ -7,18 +7,25 @@ class CapturedTaskClass {
   async createTask(user: User, tasks: Array<Task>): Promise<Array<Task>> {
     const savedTasks = [];
     for (let i = 0; i < tasks.length; i += 1) {
-      const { error } = validateTask(tasks[i]);
-      if (error) throw error.details[0].message;
+      if (tasks[i].type === "text") {
+        const { error } = validateTask(tasks[i]);
+        if (error) throw error.details[0].message;
 
-      let captured = new CapturedTask({
-        desc: tasks[i].desc,
-        user,
-      });
-      captured = await captured.save();
-      savedTasks.push(captured);
+        let captured = new CapturedTask({
+          desc: tasks[i].desc,
+          type: tasks[i].type,
+          user,
+        });
+        captured = await captured.save();
+        savedTasks.push(pick(captured, ["_id", "desc", "date", "type"]));
+      }
     }
-
     return savedTasks;
+  }
+
+  async updateTask(user: User, task: Task): Promise<Task> {
+    const updatedTask = await CapturedTask.findByIdAndUpdate({ _id: task._id });
+    return updatedTask;
   }
 
   async getAllTasks(user: User): Promise<Array<Task>> {
