@@ -32,7 +32,7 @@ class CapturedTaskClass {
     const tasksStoredInDB = await CapturedTask.find({ user });
     const tasks = [];
     for (let i = 0; i < tasksStoredInDB.length; i += 1) {
-      tasks.push(pick(tasksStoredInDB[i], ["_id", "desc", "category", "date"]));
+      tasks.push(pick(tasksStoredInDB[i], ["_id", "desc", "type", "date"]));
     }
     return tasks;
   }
