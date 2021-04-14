@@ -23,8 +23,11 @@ class CapturedTaskClass {
     return savedTasks;
   }
 
-  async updateTask(user: User, task: Task): Promise<Task> {
-    const updatedTask = await CapturedTask.findByIdAndUpdate({ _id: task._id });
+  async updateTask(task: Task): Promise<Task> {
+    const updatedTask = await CapturedTask.findByIdAndUpdate(
+      { _id: task._id },
+      task
+    );
     return updatedTask;
   }
 

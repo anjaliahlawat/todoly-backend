@@ -41,8 +41,9 @@ router.post(
   "/edit",
   asyncMiddleware(
     async (req: Request, res: Response): Promise<void> => {
-      const { email, task } = req.body;
-      const user = await userObj.getUserId(email);
+      const { task } = req.body;
+      const updatedTask = await capturedObj.updateTask(task);
+      res.send(updatedTask);
     }
   )
 );
