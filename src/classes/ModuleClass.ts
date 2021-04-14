@@ -3,7 +3,6 @@ import { Module as ModuleModal } from "../modals/module";
 import Task from "../interface/task";
 import Module from "../interface/module";
 import Project from "../interface/project";
-import User from "../interface/user";
 import TaskClass from "./TaskClass";
 
 const taskObj = new TaskClass();
@@ -17,8 +16,8 @@ class ModuleClass {
     return moduleObj.save();
   }
 
-  async addTask(task: Task, user: User): Promise<Task> {
-    const savedTask = await taskObj.createTask(task, true, user);
+  async addTask(task: Task): Promise<Task> {
+    const savedTask = await taskObj.organizeTask(task, true);
 
     // const moduleTaskObj = new ModuleTask({
     //   module: task.module_id,

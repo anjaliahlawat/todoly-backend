@@ -20,12 +20,12 @@ class ProjectClass {
     return projectObj;
   }
 
-  async addTask(task: Task, user: User): Promise<Task> {
+  async addTask(task: Task): Promise<Task> {
     let savedTask: Task;
     if (task.moduleId) {
-      savedTask = await moduleObj.addTask(task, user);
+      savedTask = await moduleObj.addTask(task);
     } else {
-      savedTask = await taskObj.createTask(task, true, user);
+      savedTask = await taskObj.organizeTask(task, true);
       const projectTask = new ProjectTask({
         project: task.projectId,
         task: savedTask,
