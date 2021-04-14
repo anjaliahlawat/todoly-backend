@@ -1,13 +1,9 @@
 import { Schema, model } from "mongoose";
-import { validate, object as JoiObject, string } from "joi";
-import Task from "../interface/task";
 
 const capturedTaskSchema = new Schema({
-  desc: {
-    type: String,
-    required: true,
-    minlength: 1,
-    maxlength: 200,
+  task: {
+    type: Schema.Types.ObjectId,
+    ref: "Task",
   },
   date: {
     type: Date,
@@ -26,13 +22,4 @@ const capturedTaskSchema = new Schema({
 
 const CapturedTask = model("CapturedTask", capturedTaskSchema);
 
-function validateTask(task: Task): JoiObject {
-  const schema = {
-    desc: string().min(1).max(200).required(),
-    type: string().required(),
-  };
-
-  return validate(task, schema);
-}
-
-export { CapturedTask, validateTask };
+export default CapturedTask;
