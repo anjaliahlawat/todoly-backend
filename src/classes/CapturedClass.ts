@@ -34,7 +34,7 @@ class CapturedTaskClass {
   }
 
   async deleteTask(taskId: string): Promise<void> {
-    await CapturedTask.findAndRemove({ task: taskId });
+    await CapturedTask.findOneAndRemove({ task: taskId });
   }
 }
 

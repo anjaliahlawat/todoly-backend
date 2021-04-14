@@ -3,11 +3,13 @@ import { Request, Response, Router } from "express";
 import asyncMiddleware from "../middleware/async";
 import UserClass from "../classes/UserClass";
 import CapturedTaskClass from "../classes/CapturedClass";
+import TaskClass from "../classes/TaskClass";
 
 const router = Router();
 
 const userObj = new UserClass();
 const capturedObj = new CapturedTaskClass();
+const taskObj = new TaskClass();
 
 router.post(
   "/add",
@@ -15,7 +17,8 @@ router.post(
     async (req: Request, res: Response): Promise<void> => {
       const { email, tasks } = req.body;
       const user = await userObj.getUserId(email);
-      const savedTasks = await capturedObj.createTask(user, tasks);
+      const addedTasks = await taskObj.createTask(tasks, user);
+      const savedTasks = await capturedObj.add(addedTasks);
       const response = {
         result: "success",
         data: savedTasks,
@@ -31,8 +34,9 @@ router.post(
     async (req: Request, res: Response): Promise<void> => {
       const { email } = req.body;
       const user = await userObj.getUserId(email);
-      const tasks = await capturedObj.getAllTasks(user);
-      res.send(tasks);
+      const createdTasks = await taskObj.getAllTasks(user);
+      const capturedTasks = await capturedObj.getAllTasks(createdTasks);
+      res.send(capturedTasks);
     }
   )
 );
@@ -42,7 +46,7 @@ router.post(
   asyncMiddleware(
     async (req: Request, res: Response): Promise<void> => {
       const { task } = req.body;
-      const updatedTask = await capturedObj.updateTask(task);
+      const updatedTask = await taskObj.updateTask(task);
       res.send(updatedTask);
     }
   )
@@ -53,6 +57,7 @@ router.post(
   asyncMiddleware(
     async (req: Request, res: Response): Promise<void> => {
       const { task } = req.body;
+      await taskObj.deleteTask(task);
       await capturedObj.deleteTask(task);
       res.send({ result: "success" });
     }
