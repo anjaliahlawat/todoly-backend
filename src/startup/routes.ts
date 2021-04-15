@@ -2,6 +2,7 @@ import { json as expressJson } from "express";
 
 import * as auth from "../routes/auth";
 import * as capturedTask from "../routes/captureTask";
+import * as task from "../routes/task";
 import * as users from "../routes/users";
 import error from "../middleware/error";
 
@@ -17,6 +18,7 @@ const configRoutes = (app): void => {
   app.use(expressJson());
   app.use("/api/auth", auth);
   app.use("/api/capture-task", capturedTask);
+  app.use("/api/organize", task);
   app.use("/api/register", users);
   app.use(error);
 };

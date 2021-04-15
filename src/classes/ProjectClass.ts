@@ -22,17 +22,17 @@ class ProjectClass {
 
   async addTask(task: Task): Promise<Task> {
     let savedTask: Task;
-    if (task.moduleId) {
-      savedTask = await moduleObj.addTask(task);
-    } else {
-      savedTask = await taskObj.organizeTask(task, true);
-      const projectTask = new ProjectTask({
-        project: task.projectId,
-        task: savedTask,
-      });
+    // if (task.moduleId) {
+    //   savedTask = await moduleObj.addTask(task);
+    // } else {
+    //   savedTask = await taskObj.organizeTask(task, true);
+    //   const projectTask = new ProjectTask({
+    //     project: task.projectId,
+    //     task: savedTask,
+    //   });
 
-      await projectTask.save();
-    }
+    //   await projectTask.save();
+    // }
 
     return savedTask;
   }

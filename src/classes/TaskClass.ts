@@ -41,10 +41,9 @@ class TaskClass {
     return updatedTask;
   }
 
-  async organizeTask(task: Task, project = false): Promise<Task> {
+  async addToSimpleTask(task: Task): Promise<Task> {
     const taskObj = new OrganizedTask({
-      desc: task.desc,
-      isProject: project,
+      task: task._id,
       finish_date: task.finishDate,
     });
     return taskObj.save();

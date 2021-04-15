@@ -5,26 +5,9 @@ const organizedTaskSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Task",
   },
-  isProject: {
-    type: Boolean,
-    default: false,
-  },
-  isLater: {
-    type: Boolean,
-    default: false,
-  },
-  isAwaited: {
-    type: Boolean,
-    default: false,
-  },
   status: {
     type: String,
     default: "Progress",
-  },
-  date: {
-    type: Date,
-    default: Date.now,
-    required: true,
   },
   finish_date: {
     type: Date,
@@ -32,6 +15,6 @@ const organizedTaskSchema = new Schema({
   },
 });
 
-const OrganizedTask = model("Organizedtask", organizedTaskSchema);
+const OrganizedTask = model("organizedtask", organizedTaskSchema);
 
 export default OrganizedTask;

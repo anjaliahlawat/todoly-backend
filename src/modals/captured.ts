@@ -10,14 +10,6 @@ const capturedTaskSchema = new Schema({
     required: true,
     default: Date.now,
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
 });
 
 const CapturedTask = model("CapturedTask", capturedTaskSchema);

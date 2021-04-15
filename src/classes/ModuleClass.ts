@@ -15,18 +15,6 @@ class ModuleClass {
     });
     return moduleObj.save();
   }
-
-  async addTask(task: Task): Promise<Task> {
-    const savedTask = await taskObj.organizeTask(task, true);
-
-    // const moduleTaskObj = new ModuleTask({
-    //   module: task.module_id,
-    //   task: savedTask._id,
-    // });
-
-    // await moduleTaskObj.save();
-    return savedTask;
-  }
 }
 
 export default ModuleClass;
