@@ -1,17 +1,18 @@
+import Project from "./project";
+
 interface Task {
   _id: string;
   desc: string;
-  isProject: boolean;
-  isLater: boolean;
-  isAwaited: boolean;
-  status: string;
-  date: Date;
   finishDate: Date;
-  moduleId: string;
-  projectId: string;
-  type: string;
   img: string;
+  loc: string;
+  moduleId: string;
+  path: string;
+  project: Project;
+  projectId: string;
   save: () => any;
+  status: string;
+  type: string;
 }
 
 export default Task;

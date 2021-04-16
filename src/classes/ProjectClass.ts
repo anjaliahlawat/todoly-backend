@@ -1,40 +1,33 @@
-import ModuleClass from "./ModuleClass";
-import TaskClass from "./TaskClass";
 import { Project as ProjectModal } from "../modals/project";
-import ProjectTask from "../modals/project-task";
-import Task from "../interface/task";
 import User from "../interface/user";
 import Project from "../interface/project";
-
-const moduleObj = new ModuleClass();
-const taskObj = new TaskClass();
+import Task from "../interface/task";
+import ProjectTask from "../modals/project-task";
 
 class ProjectClass {
-  async createProject(project: Project, userId: string): Promise<Project> {
-    let projectObj = new ProjectModal({
-      desc: project.desc,
-      user: userId,
-    });
-
-    projectObj = await projectObj.save();
-    return projectObj;
+  async addProject(project: Project, user: User): Promise<Project> {
+    const projectObj = await this.getProject(project.name);
+    if (projectObj.length === 0) {
+      return this.createProject(project, user);
+    }
+    return projectObj[0];
   }
 
-  async addTask(task: Task): Promise<Task> {
-    let savedTask: Task;
-    // if (task.moduleId) {
-    //   savedTask = await moduleObj.addTask(task);
-    // } else {
-    //   savedTask = await taskObj.organizeTask(task, true);
-    //   const projectTask = new ProjectTask({
-    //     project: task.projectId,
-    //     task: savedTask,
-    //   });
+  private getProject(name): Promise<Array<Project>> {
+    return ProjectModal.find({ name });
+  }
 
-    //   await projectTask.save();
-    // }
+  private async createProject(project: Project, user: User): Promise<Project> {
+    const projectObj = new ProjectModal({
+      name: project.name,
+      user,
+    });
+    return projectObj.save();
+  }
 
-    return savedTask;
+  async addTaskToProject(project: Project, task: Task): Promise<void> {
+    const projectTask = await new ProjectTask({ task, project });
+    projectTask.save();
   }
 }
 

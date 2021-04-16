@@ -1,8 +1,9 @@
 import { Schema, model } from "mongoose";
 import { validate, object as JoiObject, string } from "joi";
+import Project from "../interface/project";
 
 const projectSchema = new Schema({
-  desc: {
+  name: {
     type: String,
     required: true,
     minlength: 1,
@@ -10,7 +11,7 @@ const projectSchema = new Schema({
   },
   status: {
     type: String,
-    default: "In Progress",
+    default: "To do",
   },
   isAwaited: {
     type: Boolean,
@@ -20,11 +21,6 @@ const projectSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  date: {
-    type: Date,
-    required: true,
-    default: Date.now,
-  },
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -33,13 +29,12 @@ const projectSchema = new Schema({
 
 const Project = model("Project", projectSchema);
 
-function validateProject(project: typeof projectSchema): JoiObject {
+function validateProject(project: Project): JoiObject {
   const schema = {
-    desc: string().min(1).max(200).required(),
-    date: string().max(100),
+    name: string().min(1).max(200).required(),
   };
 
   return validate(project, schema);
 }
 
-export { Project, projectSchema, validateProject };
+export { Project, validateProject };

@@ -5,6 +5,9 @@ const organizedTaskSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Task",
   },
+  path: {
+    type: String,
+  },
   status: {
     type: String,
     default: "Progress",

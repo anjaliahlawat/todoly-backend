@@ -1,3 +1,5 @@
+import { pick } from "lodash";
+
 import OrganizedTask from "../modals/organizedTask";
 import { TaskModal, validateTask } from "../modals/task";
 import User from "../interface/user";
@@ -9,7 +11,7 @@ class TaskClass {
 
     for (let i = 0; i < tasks.length; i += 1) {
       if (tasks[i].type === "text") {
-        const { error } = validateTask(tasks[i]);
+        const { error } = validateTask(pick(tasks[i], ["desc", "type"]));
         if (error) throw error.details[0].message;
 
         let newTask = new TaskModal({
@@ -18,7 +20,7 @@ class TaskClass {
           user,
         });
         newTask = await newTask.save();
-        savedTasks.push(newTask);
+        savedTasks.push({ ...newTask, ...tasks[i] });
       }
     }
     return savedTasks;
@@ -41,9 +43,10 @@ class TaskClass {
     return updatedTask;
   }
 
-  async addToSimpleTask(task: Task): Promise<Task> {
+  async addTaskInOrganizedModal(task: Task): Promise<Task> {
     const taskObj = new OrganizedTask({
-      task: task._id,
+      task,
+      path: task.path,
       finish_date: task.finishDate,
     });
     return taskObj.save();
