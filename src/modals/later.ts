@@ -1,17 +1,17 @@
 import { Schema, model } from "mongoose";
-import { validate, object as JoiObject, string } from "joi";
 
 const laterTasksSchema = new Schema({
-  desc: {
-    type: String,
-    required: true,
-    minlength: 1,
-    maxlength: 200,
+  task: {
+    type: Schema.Types.ObjectId,
+    ref: "Task",
   },
-  date: {
-    type: Date,
-    required: true,
-    default: Date.now,
+  organizedTask: {
+    type: Schema.Types.ObjectId,
+    ref: "OrganizedTask",
+  },
+  project: {
+    type: Schema.Types.ObjectId,
+    ref: "Project",
   },
   user: {
     type: Schema.Types.ObjectId,
@@ -21,13 +21,4 @@ const laterTasksSchema = new Schema({
 
 const LaterTasks = model("LaterTasks", laterTasksSchema);
 
-function validateLaterTasks(tasks: typeof laterTasksSchema): JoiObject {
-  const schema = {
-    desc: string().min(1).max(200).required(),
-    date: string().max(100),
-  };
-
-  return validate(tasks, schema);
-}
-
-export { LaterTasks, validateLaterTasks };
+export default LaterTasks;

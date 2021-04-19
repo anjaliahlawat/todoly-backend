@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import { validate, object as JoiObject, string } from "joi";
+import Task from "../interface/task";
 
 const waitingListSchema = new Schema({
   reason: {
@@ -7,6 +8,14 @@ const waitingListSchema = new Schema({
     required: true,
     minlength: 3,
     maxlength: 200,
+  },
+  task: {
+    type: Schema.Types.ObjectId,
+    ref: "Task",
+  },
+  organizedTask: {
+    type: Schema.Types.ObjectId,
+    ref: "OrganizedTask",
   },
   date: {
     type: Date,
@@ -20,13 +29,12 @@ const waitingListSchema = new Schema({
 
 const WaitingList = model("WaitingList", waitingListSchema);
 
-function validateWaitingList(task: typeof waitingListSchema): JoiObject {
+function validateWaitingList(task: Task): JoiObject {
   const schema = {
-    desc: string().min(1).max(200).required(),
-    date: string().max(100),
+    reason: string().min(3).max(200).required(),
   };
 
   return validate(task, schema);
 }
 
-export { WaitingList, waitingListSchema, validateWaitingList };
+export { WaitingList, validateWaitingList };

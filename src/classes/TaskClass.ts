@@ -1,9 +1,11 @@
 import { pick } from "lodash";
 
+import LaterTasks from "../modals/later";
 import OrganizedTask from "../modals/organizedTask";
 import { TaskModal, validateTask } from "../modals/task";
-import User from "../interface/user";
 import Task from "../interface/task";
+import User from "../interface/user";
+import { WaitingList, validateWaitingList } from "../modals/waitingList";
 
 class TaskClass {
   async createTask(tasks: Array<Task>, user: User): Promise<Array<Task>> {
@@ -50,6 +52,47 @@ class TaskClass {
       finish_date: task.finishDate,
     });
     return taskObj.save();
+  }
+
+  async addTaskInLaterModal(task: Task, user: User): Promise<Task> {
+    let laterTaskObj;
+    if (task.from === "captured") {
+      laterTaskObj = new LaterTasks({ task: task._id, user });
+    }
+    if (task.from === "organized") {
+      laterTaskObj = new LaterTasks({ organizedTask: task._id, user });
+    }
+    if (task.from === "project") {
+      laterTaskObj = new LaterTasks({ project: task._id, user });
+    }
+    laterTaskObj = await laterTaskObj.save();
+    return pick(laterTaskObj, "_id", "task");
+  }
+
+  async addTaskInWaiting(task: Task, user: User): Promise<Task> {
+    let waitingObj;
+
+    const { error } = validateWaitingList(pick(task, ["reason"]));
+    if (error) throw error.details[0].message;
+
+    if (task.from === "captured") {
+      waitingObj = await new WaitingList({
+        task: task._id,
+        reason: task.reason,
+        date: task.finishDate,
+        user,
+      });
+    }
+    if (task.from === "organized") {
+      waitingObj = await new WaitingList({
+        organizedTask: task._id,
+        reason: task.reason,
+        date: task.finishDate,
+        user,
+      });
+    }
+    waitingObj = await waitingObj.save();
+    return pick(waitingObj, "_id", "reason", "date");
   }
 }
 

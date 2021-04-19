@@ -1,8 +1,11 @@
+import CapturedTaskClass from "./CapturedClass";
 import Project from "../interface/project";
-import Task from "../interface/task";
-import User from "../interface/user";
 import ProjectClass from "./ProjectClass";
+import Task from "../interface/task";
 import TaskClass from "./TaskClass";
+import User from "../interface/user";
+
+const capturedObj = new CapturedTaskClass();
 
 class OrganizedTaskClass {
   task: TaskClass;
@@ -16,12 +19,20 @@ class OrganizedTaskClass {
 
   async organizeTask(task: Task, user: User): Promise<Task | Project> {
     let addedTask;
-    if (task.loc === "simple-task") {
-      addedTask = this.addTaskInOrganizedModal(task);
+    if (task.to === "simple-task") {
+      addedTask = await this.addTaskInOrganizedModal(task);
     }
-    if (task.loc === "project") {
-      addedTask = this.addToProject(task.project, user);
+    if (task.to === "project") {
+      addedTask = await this.addToProject(task.project, user);
     }
+    if (task.to === "later") {
+      addedTask = await this.addToLater(task, user);
+    }
+    if (task.to === "waiting") {
+      addedTask = await this.addToWaiting(task, user);
+    }
+
+    await this.cleanUp(task);
     return addedTask;
   }
 
@@ -32,7 +43,6 @@ class OrganizedTaskClass {
   private async addToProject(project: Project, user: User): Promise<Project> {
     const projectObj = await this.project.addProject(project, user);
     const tasks = await this.task.createTask(project.tasks, user);
-    console.log(tasks);
 
     for (let i = 0; i < tasks.length; i += 1) {
       const organizedTaskObj = await this.addTaskInOrganizedModal(tasks[i]);
@@ -42,12 +52,22 @@ class OrganizedTaskClass {
     return projectObj;
   }
 
-  // private async addToLater() {
+  private async addToLater(task: Task, user: User) {
+    return this.task.addTaskInLaterModal(task, user);
+  }
 
-  // }
-  // private async addToWaiting() {
+  private async addToWaiting(task: Task, user: User) {
+    return this.task.addTaskInWaiting(task, user);
+  }
 
-  // }
+  private async cleanUp(task: Task) {
+    if (task.from === "captured") {
+      await capturedObj.deleteTask(task._id);
+    }
+    if (task.to === "project") {
+      await this.task.deleteTask(task._id);
+    }
+  }
 }
 
 export default OrganizedTaskClass;
