@@ -1,9 +1,12 @@
+import { pick } from "lodash";
+
 import CapturedTaskClass from "./CapturedClass";
 import Project from "../interface/project";
 import ProjectClass from "./ProjectClass";
 import Task from "../interface/task";
 import TaskClass from "./TaskClass";
 import User from "../interface/user";
+import ModuleClass from "./ModuleClass";
 
 const capturedObj = new CapturedTaskClass();
 
@@ -12,9 +15,12 @@ class OrganizedTaskClass {
 
   project: ProjectClass;
 
+  module: ModuleClass;
+
   constructor() {
     this.task = new TaskClass();
     this.project = new ProjectClass();
+    this.module = new ModuleClass();
   }
 
   async organizeTask(task: Task, user: User): Promise<Task | Project> {
@@ -42,14 +48,34 @@ class OrganizedTaskClass {
 
   private async addToProject(project: Project, user: User): Promise<Project> {
     const projectObj = await this.project.addProject(project, user);
-    const tasks = await this.task.createTask(project.tasks, user);
+    const { modules, tasks } = project;
+    if (modules.length > 0) {
+      for (let i = 0; i < modules.length; i += 1) {
+        const moduleObj = await this.module.addModule(modules[i], projectObj);
 
-    for (let i = 0; i < tasks.length; i += 1) {
-      const organizedTaskObj = await this.addTaskInOrganizedModal(tasks[i]);
-      await this.project.addTaskToProject(projectObj, organizedTaskObj);
+        const moduleTasks = await this.task.createTask(modules[i].tasks, user);
+
+        for (let j = 0; j < moduleTasks.length; j += 1) {
+          const organizedTaskObj = await this.addTaskInOrganizedModal(
+            moduleTasks[j]
+          );
+          await this.module.addTaskToModule(moduleObj, organizedTaskObj);
+        }
+      }
     }
 
-    return projectObj;
+    if (tasks.length > 0) {
+      const projectTasks = await this.task.createTask(project.tasks, user);
+
+      for (let i = 0; i < projectTasks.length; i += 1) {
+        const organizedTaskObj = await this.addTaskInOrganizedModal(
+          projectTasks[i]
+        );
+        await this.project.addTaskToProject(projectObj, organizedTaskObj);
+      }
+    }
+
+    return pick(projectObj, "_id", "name");
   }
 
   private async addToLater(task: Task, user: User) {

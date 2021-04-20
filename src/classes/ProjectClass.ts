@@ -13,7 +13,7 @@ class ProjectClass {
     return projectObj[0];
   }
 
-  private getProject(name): Promise<Array<Project>> {
+  private async getProject(name): Promise<Array<Project>> {
     return ProjectModal.find({ name });
   }
 

@@ -1,12 +1,12 @@
 import Project from "./project";
+import Task from "./task";
 
 interface Module {
   _id: string;
   name: string;
-  isLater: boolean;
-  isAwaited: boolean;
   project: Project;
   save: () => any;
+  tasks: Array<Task>;
 }
 
 export default Module;

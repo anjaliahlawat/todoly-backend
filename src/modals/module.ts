@@ -8,14 +8,6 @@ const moduleSchema = new Schema({
     minlength: 3,
     maxlength: 100,
   },
-  isAwaited: {
-    type: Boolean,
-    default: false,
-  },
-  isLater: {
-    type: Boolean,
-    default: false,
-  },
   project: {
     type: Schema.Types.ObjectId,
     project: "Project",

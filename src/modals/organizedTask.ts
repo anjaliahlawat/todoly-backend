@@ -10,7 +10,7 @@ const organizedTaskSchema = new Schema({
   },
   status: {
     type: String,
-    default: "Progress",
+    default: "To do",
   },
   finish_date: {
     type: Date,

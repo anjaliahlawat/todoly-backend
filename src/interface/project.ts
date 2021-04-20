@@ -1,3 +1,4 @@
+import Module from "./module";
 import Task from "./task";
 import User from "./user";
 
@@ -6,6 +7,7 @@ interface Project {
   date: Date;
   isLater: boolean;
   isAwaited: boolean;
+  modules: Array<Module>;
   name: string;
   save: () => any;
   status: string;
