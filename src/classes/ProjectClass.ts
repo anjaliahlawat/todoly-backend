@@ -17,6 +17,11 @@ class ProjectClass {
     return ProjectModal.find({ name });
   }
 
+  async getAllProjects(user: User): Promise<Array<Project>> {
+    const projects = await ProjectModal.find({ user });
+    return projects;
+  }
+
   private async createProject(project: Project, user: User): Promise<Project> {
     const projectObj = new ProjectModal({
       name: project.name,

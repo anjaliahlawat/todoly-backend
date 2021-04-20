@@ -1,12 +1,13 @@
 import { pick } from "lodash";
 
 import CapturedTaskClass from "./CapturedClass";
+import Folder from "../interface/folder";
+import ModuleClass from "./ModuleClass";
 import Project from "../interface/project";
 import ProjectClass from "./ProjectClass";
 import Task from "../interface/task";
 import TaskClass from "./TaskClass";
 import User from "../interface/user";
-import ModuleClass from "./ModuleClass";
 
 const capturedObj = new CapturedTaskClass();
 
@@ -21,25 +22,6 @@ class OrganizedTaskClass {
     this.task = new TaskClass();
     this.project = new ProjectClass();
     this.module = new ModuleClass();
-  }
-
-  async organizeTask(task: Task, user: User): Promise<Task | Project> {
-    let addedTask;
-    if (task.to === "simple-task") {
-      addedTask = await this.addTaskInOrganizedModal(task);
-    }
-    if (task.to === "project") {
-      addedTask = await this.addToProject(task.project, user);
-    }
-    if (task.to === "later") {
-      addedTask = await this.addToLater(task, user);
-    }
-    if (task.to === "waiting") {
-      addedTask = await this.addToWaiting(task, user);
-    }
-
-    await this.cleanUp(task);
-    return addedTask;
   }
 
   private async addTaskInOrganizedModal(task: Task): Promise<Task> {
@@ -93,6 +75,54 @@ class OrganizedTaskClass {
     if (task.to === "project") {
       await this.task.deleteTask(task._id);
     }
+  }
+
+  async getFolders(user: User): Promise<Array<Folder>> {
+    const simpletasks = await this.task.getOrganizedTasks(user);
+    const projects = await this.project.getAllProjects(user);
+    const waitingTasks = await this.task.getAwaitingTasks(user);
+    const laterTasks = await this.task.getLaterTasks(user);
+    const folders = [];
+    folders.push({
+      title: "Simple tasks",
+      subtitle: `${simpletasks.length} tasks`,
+      total: simpletasks.length,
+    });
+    folders.push({
+      title: "Projects",
+      subtitle: `${projects.length} projects`,
+      total: projects.length,
+    });
+    folders.push({
+      title: "Waiting",
+      subtitle: `${waitingTasks.length} awaiting`,
+      total: waitingTasks.length,
+    });
+    folders.push({
+      title: "Later",
+      subtitle: `${laterTasks.length} tasks`,
+      total: laterTasks.length,
+    });
+    return folders;
+  }
+
+  async organizeTask(task: Task, user: User): Promise<Task | Project> {
+    let addedTask;
+    if (task.to === "simple-task") {
+      addedTask = await this.addTaskInOrganizedModal(task);
+    }
+    if (task.to === "project") {
+      addedTask = await this.addToProject(task.project, user);
+    }
+    if (task.to === "later") {
+      addedTask = await this.addToLater(task, user);
+    }
+    if (task.to === "waiting") {
+      addedTask = await this.addToWaiting(task, user);
+    }
+
+    await this.cleanUp(task);
+    return addedTask;
   }
 }
 

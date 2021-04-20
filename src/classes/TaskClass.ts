@@ -33,6 +33,25 @@ class TaskClass {
     return tasksStoredInDB;
   }
 
+  async getOrganizedTasks(user: User): Promise<Array<Task>> {
+    const tasks = await this.getAllTasks(user);
+    const organizedTasks = await OrganizedTask.find({
+      path: /^simple-tasks/,
+      task: { $in: [...tasks] },
+    });
+    return organizedTasks;
+  }
+
+  async getLaterTasks(user: User): Promise<Array<Task>> {
+    const laterTasks = await LaterTasks.find({ user });
+    return laterTasks;
+  }
+
+  async getAwaitingTasks(user: User): Promise<Array<Task>> {
+    const waitingtasks = await WaitingList.find({ user });
+    return waitingtasks;
+  }
+
   async deleteTask(taskId: string): Promise<void> {
     await TaskModal.findByIdAndRemove(taskId);
   }

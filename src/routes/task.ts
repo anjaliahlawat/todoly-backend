@@ -25,4 +25,20 @@ router.post(
   )
 );
 
+router.post(
+  "/folders",
+  asyncMiddleware(
+    async (req: Request, res: Response): Promise<void> => {
+      const { email } = req.body;
+      const user = await userObj.getUserId(email);
+      const folders = await organizedTaskObj.getFolders(user);
+      const response = {
+        result: "success",
+        folders,
+      };
+      res.send(response);
+    }
+  )
+);
+
 module.exports = router;
