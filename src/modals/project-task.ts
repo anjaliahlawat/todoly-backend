@@ -11,6 +11,6 @@ const projectTaskSchema = new Schema({
   },
 });
 
-const ProjectTask = model("ProjectTask", projectTaskSchema);
+const ProjectTask = model("projecttasks", projectTaskSchema);
 
 export default ProjectTask;
