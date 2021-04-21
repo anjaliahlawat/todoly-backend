@@ -2,6 +2,7 @@ import Project from "./project";
 
 interface Task {
   _id: string;
+  task: string;
   desc: string;
   finishDate: Date;
   from: string;

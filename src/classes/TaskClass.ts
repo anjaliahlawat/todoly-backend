@@ -44,6 +44,10 @@ class TaskClass {
     return tasksStoredInDB;
   }
 
+  async getTaskDetails(_id: string): Promise<Task> {
+    return TaskModal.findById(_id);
+  }
+
   async getOrganizedTasksCount(user: User): Promise<number> {
     const tasks = await this.getAllTasks(user);
     const count = await OrganizedTask.where({
@@ -55,6 +59,25 @@ class TaskClass {
 
   async getOrganizedTasks(user: User): Promise<Array<Task>> {
     const tasks = await this.getAllTasks(user);
+    const organizedTasks = await this.getOrganizedTaskFromDB(tasks);
+
+    const finalTasks = [];
+
+    for (let i = 0; i < organizedTasks.length; i += 1) {
+      finalTasks.push({
+        ...pick(await this.getTaskDetails(organizedTasks[i].task), [
+          "desc",
+          "type",
+        ]),
+        ...pick(organizedTasks[i], ["_id", "path", "finish_date", "status"]),
+      });
+    }
+    return finalTasks;
+  }
+
+  private async getOrganizedTaskFromDB(
+    tasks: Array<Task>
+  ): Promise<Array<Task>> {
     const organizedTasks = await OrganizedTask.find({
       path: /^simple-tasks/,
       task: { $in: [...tasks] },

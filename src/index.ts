@@ -14,7 +14,7 @@ if (!config.get("jwtPrivateKey")) {
 startDB();
 configRoutes(app);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 // eslint-disable-next-line no-console
 const server = app.listen(port, () => console.log(`running on ${port}`));
 

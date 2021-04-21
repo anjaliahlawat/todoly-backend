@@ -106,11 +106,11 @@ class OrganizedTaskClass {
     user: User,
     folder: string
   ): Promise<Array<Task> | Array<Project>> {
-    let count;
+    let folderData;
     if (folder === "simple-tasks") {
-      count = await this.task.getOrganizedTasksCount(user);
+      folderData = await this.task.getOrganizedTasks(user);
     }
-    return count;
+    return folderData;
   }
 
   async organizeTask(task: Task, user: User): Promise<Task | Project> {
