@@ -4,7 +4,6 @@ import OrganizedTask from "../modals/organizedTask";
 import { TaskModal, validateTask } from "../modals/task";
 import Task from "../interface/task";
 import User from "../interface/user";
-import { WaitingList, validateWaitingList } from "../modals/waitingList";
 
 class TaskClass {
   async addTaskInOrganizedModal(task: Task): Promise<Task> {
@@ -14,32 +13,6 @@ class TaskClass {
       finish_date: task.finishDate,
     });
     return taskObj.save();
-  }
-
-  async addTaskInWaiting(task: Task, user: User): Promise<Task> {
-    let waitingObj;
-
-    const { error } = validateWaitingList(pick(task, ["reason"]));
-    if (error) throw error.details[0].message;
-
-    if (task.from === "captured") {
-      waitingObj = await new WaitingList({
-        task: task._id,
-        reason: task.reason,
-        date: task.finishDate,
-        user,
-      });
-    }
-    if (task.from === "organized") {
-      waitingObj = await new WaitingList({
-        organizedTask: task._id,
-        reason: task.reason,
-        date: task.finishDate,
-        user,
-      });
-    }
-    waitingObj = await waitingObj.save();
-    return pick(waitingObj, "_id", "reason", "date");
   }
 
   async createTask(tasks: Array<Task>, user: User): Promise<Array<Task>> {
@@ -69,16 +42,6 @@ class TaskClass {
   async getAllTasks(user: User): Promise<Array<Task>> {
     const tasksStoredInDB = await TaskModal.find({ user });
     return tasksStoredInDB;
-  }
-
-  async getAwaitingTaskCount(user: User): Promise<number> {
-    const count = await WaitingList.where({ user }).count();
-    return count;
-  }
-
-  async getAwaitingTasks(user: User): Promise<Array<Task>> {
-    const waitingtasks = await WaitingList.find({ user });
-    return waitingtasks;
   }
 
   async getOrganizedTasksCount(user: User): Promise<number> {

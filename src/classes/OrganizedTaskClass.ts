@@ -1,5 +1,6 @@
 import { pick } from "lodash";
 
+import AwaitingClass from "./AwaitingClass";
 import CapturedTaskClass from "./CapturedClass";
 import Folder from "../interface/folder";
 import ModuleClass from "./ModuleClass";
@@ -21,15 +22,14 @@ class OrganizedTaskClass {
 
   later: LaterClass;
 
+  awaiting: AwaitingClass;
+
   constructor() {
     this.task = new TaskClass();
     this.project = new ProjectClass();
     this.module = new ModuleClass();
     this.later = new LaterClass();
-  }
-
-  private async addTaskInOrganizedModal(task: Task): Promise<Task> {
-    return this.task.addTaskInOrganizedModal(task);
+    this.awaiting = new AwaitingClass();
   }
 
   private async addToProject(project: Project, user: User): Promise<Project> {
@@ -42,7 +42,7 @@ class OrganizedTaskClass {
         const moduleTasks = await this.task.createTask(modules[i].tasks, user);
 
         for (let j = 0; j < moduleTasks.length; j += 1) {
-          const organizedTaskObj = await this.addTaskInOrganizedModal(
+          const organizedTaskObj = await this.task.addTaskInOrganizedModal(
             moduleTasks[j]
           );
           await this.module.addTaskToModule(moduleObj, organizedTaskObj);
@@ -54,7 +54,7 @@ class OrganizedTaskClass {
       const projectTasks = await this.task.createTask(project.tasks, user);
 
       for (let i = 0; i < projectTasks.length; i += 1) {
-        const organizedTaskObj = await this.addTaskInOrganizedModal(
+        const organizedTaskObj = await this.task.addTaskInOrganizedModal(
           projectTasks[i]
         );
         await this.project.addTaskToProject(projectObj, organizedTaskObj);
@@ -62,14 +62,6 @@ class OrganizedTaskClass {
     }
 
     return pick(projectObj, "_id", "name");
-  }
-
-  private async addToLater(task: Task, user: User) {
-    return this.later.addTaskInLaterModal(task, user);
-  }
-
-  private async addToWaiting(task: Task, user: User) {
-    return this.task.addTaskInWaiting(task, user);
   }
 
   private async cleanUp(task: Task) {
@@ -84,7 +76,7 @@ class OrganizedTaskClass {
   async getFolders(user: User): Promise<Array<Folder>> {
     const simpletasksCount = await this.task.getOrganizedTasksCount(user);
     const projectCount = await this.project.getProjectCount(user);
-    const waitingTaskCount = await this.task.getAwaitingTaskCount(user);
+    const waitingTaskCount = await this.awaiting.getAwaitingTaskCount(user);
     const laterTaskCount = await this.later.getLaterTaskCount(user);
     const folders = [];
     folders.push({
@@ -124,16 +116,16 @@ class OrganizedTaskClass {
   async organizeTask(task: Task, user: User): Promise<Task | Project> {
     let addedTask;
     if (task.to === "simple-task") {
-      addedTask = await this.addTaskInOrganizedModal(task);
+      addedTask = await this.task.addTaskInOrganizedModal(task);
     }
     if (task.to === "project") {
       addedTask = await this.addToProject(task.project, user);
     }
     if (task.to === "later") {
-      addedTask = await this.addToLater(task, user);
+      addedTask = await this.later.addTaskInLaterModal(task, user);
     }
     if (task.to === "waiting") {
-      addedTask = await this.addToWaiting(task, user);
+      addedTask = await this.awaiting.addTaskInWaiting(task, user);
     }
 
     await this.cleanUp(task);
