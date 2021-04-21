@@ -22,6 +22,11 @@ class ProjectClass {
     return projects;
   }
 
+  async getProjectCount(user: User): Promise<number> {
+    const count = await ProjectModal.where({ user }).count();
+    return count;
+  }
+
   private async createProject(project: Project, user: User): Promise<Project> {
     const projectObj = new ProjectModal({
       name: project.name,

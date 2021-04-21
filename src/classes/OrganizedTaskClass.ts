@@ -78,32 +78,43 @@ class OrganizedTaskClass {
   }
 
   async getFolders(user: User): Promise<Array<Folder>> {
-    const simpletasks = await this.task.getOrganizedTasks(user);
-    const projects = await this.project.getAllProjects(user);
-    const waitingTasks = await this.task.getAwaitingTasks(user);
-    const laterTasks = await this.task.getLaterTasks(user);
+    const simpletasksCount = await this.task.getOrganizedTasksCount(user);
+    const projectCount = await this.project.getProjectCount(user);
+    const waitingTaskCount = await this.task.getAwaitingTaskCount(user);
+    const laterTaskCount = await this.task.getLaterTaskCount(user);
     const folders = [];
     folders.push({
       title: "Simple tasks",
-      subtitle: `${simpletasks.length} tasks`,
-      total: simpletasks.length,
+      subtitle: `${simpletasksCount} tasks`,
+      total: simpletasksCount,
     });
     folders.push({
       title: "Projects",
-      subtitle: `${projects.length} projects`,
-      total: projects.length,
+      subtitle: `${projectCount} projects`,
+      total: projectCount,
     });
     folders.push({
       title: "Waiting",
-      subtitle: `${waitingTasks.length} awaiting`,
-      total: waitingTasks.length,
+      subtitle: `${waitingTaskCount} awaiting`,
+      total: waitingTaskCount,
     });
     folders.push({
       title: "Later",
-      subtitle: `${laterTasks.length} tasks`,
-      total: laterTasks.length,
+      subtitle: `${laterTaskCount} tasks`,
+      total: laterTaskCount,
     });
     return folders;
+  }
+
+  async getFolderData(
+    user: User,
+    folder: string
+  ): Promise<Array<Task> | Array<Project>> {
+    let count;
+    if (folder === "simple-tasks") {
+      count = await this.task.getOrganizedTasksCount(user);
+    }
+    return count;
   }
 
   async organizeTask(task: Task, user: User): Promise<Task | Project> {
