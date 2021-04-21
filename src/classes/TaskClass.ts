@@ -1,6 +1,5 @@
 import { pick } from "lodash";
 
-import LaterTasks from "../modals/later";
 import OrganizedTask from "../modals/organizedTask";
 import { TaskModal, validateTask } from "../modals/task";
 import Task from "../interface/task";
@@ -15,21 +14,6 @@ class TaskClass {
       finish_date: task.finishDate,
     });
     return taskObj.save();
-  }
-
-  async addTaskInLaterModal(task: Task, user: User): Promise<Task> {
-    let laterTaskObj;
-    if (task.from === "captured") {
-      laterTaskObj = new LaterTasks({ task: task._id, user });
-    }
-    if (task.from === "organized") {
-      laterTaskObj = new LaterTasks({ organizedTask: task._id, user });
-    }
-    if (task.from === "project") {
-      laterTaskObj = new LaterTasks({ project: task._id, user });
-    }
-    laterTaskObj = await laterTaskObj.save();
-    return pick(laterTaskObj, "_id", "task");
   }
 
   async addTaskInWaiting(task: Task, user: User): Promise<Task> {
@@ -97,11 +81,6 @@ class TaskClass {
     return waitingtasks;
   }
 
-  async getLaterTaskCount(user: User): Promise<number> {
-    const count = await WaitingList.where({ user }).count();
-    return count;
-  }
-
   async getOrganizedTasksCount(user: User): Promise<number> {
     const tasks = await this.getAllTasks(user);
     const count = await OrganizedTask.where({
@@ -118,11 +97,6 @@ class TaskClass {
       task: { $in: [...tasks] },
     });
     return organizedTasks;
-  }
-
-  async getLaterTasks(user: User): Promise<Array<Task>> {
-    const laterTasks = await LaterTasks.find({ user });
-    return laterTasks;
   }
 
   async updateTask(task: Task): Promise<Task> {

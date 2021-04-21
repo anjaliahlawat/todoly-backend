@@ -3,6 +3,7 @@ import { pick } from "lodash";
 import CapturedTaskClass from "./CapturedClass";
 import Folder from "../interface/folder";
 import ModuleClass from "./ModuleClass";
+import LaterClass from "./LaterClass";
 import Project from "../interface/project";
 import ProjectClass from "./ProjectClass";
 import Task from "../interface/task";
@@ -18,10 +19,13 @@ class OrganizedTaskClass {
 
   module: ModuleClass;
 
+  later: LaterClass;
+
   constructor() {
     this.task = new TaskClass();
     this.project = new ProjectClass();
     this.module = new ModuleClass();
+    this.later = new LaterClass();
   }
 
   private async addTaskInOrganizedModal(task: Task): Promise<Task> {
@@ -61,7 +65,7 @@ class OrganizedTaskClass {
   }
 
   private async addToLater(task: Task, user: User) {
-    return this.task.addTaskInLaterModal(task, user);
+    return this.later.addTaskInLaterModal(task, user);
   }
 
   private async addToWaiting(task: Task, user: User) {
@@ -81,7 +85,7 @@ class OrganizedTaskClass {
     const simpletasksCount = await this.task.getOrganizedTasksCount(user);
     const projectCount = await this.project.getProjectCount(user);
     const waitingTaskCount = await this.task.getAwaitingTaskCount(user);
-    const laterTaskCount = await this.task.getLaterTaskCount(user);
+    const laterTaskCount = await this.later.getLaterTaskCount(user);
     const folders = [];
     folders.push({
       title: "Simple tasks",
