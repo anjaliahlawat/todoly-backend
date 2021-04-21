@@ -45,7 +45,17 @@ class AwaitingClass {
 
   async getAwaitingTasks(user: User): Promise<Array<Task>> {
     const waitingtasks = await WaitingList.find({ user });
-    return waitingtasks;
+    const finalTasks = [];
+    for (let i = 0; i < waitingtasks.length; i += 1) {
+      finalTasks.push({
+        ...pick(await this.task.getTaskDetails(waitingtasks[i].task), [
+          "desc",
+          "type",
+        ]),
+        ...pick(waitingtasks[i], ["_id", "reason", "date"]),
+      });
+    }
+    return finalTasks;
   }
 }
 

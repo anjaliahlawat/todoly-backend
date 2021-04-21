@@ -113,6 +113,9 @@ class OrganizedTaskClass {
     if (folder === "later") {
       folderData = await this.later.getLaterTasks(user);
     }
+    if (folder === "awaiting") {
+      folderData = await this.awaiting.getAwaitingTasks(user);
+    }
     return folderData;
   }
 
