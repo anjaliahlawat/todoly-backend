@@ -110,6 +110,9 @@ class OrganizedTaskClass {
     if (folder === "simple-tasks") {
       folderData = await this.task.getOrganizedTasks(user);
     }
+    if (folder === "later") {
+      folderData = await this.later.getLaterTasks(user);
+    }
     return folderData;
   }
 

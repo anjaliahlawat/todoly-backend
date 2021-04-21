@@ -34,7 +34,17 @@ class LaterClass {
 
   async getLaterTasks(user: User): Promise<Array<Task>> {
     const laterTasks = await LaterTasks.find({ user });
-    return laterTasks;
+
+    const finalTasks = [];
+    for (let i = 0; i < laterTasks.length; i += 1) {
+      finalTasks.push({
+        ...pick(await this.task.getTaskDetails(laterTasks[i].task), [
+          "desc",
+          "type",
+        ]),
+      });
+    }
+    return finalTasks;
   }
 }
 
