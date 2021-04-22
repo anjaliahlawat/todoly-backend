@@ -32,6 +32,11 @@ class ModuleClass {
     const moduleTask = await new ModuleTask({ task, module });
     moduleTask.save();
   }
+
+  async getModuleTasks(module: string): Promise<Array<Module>> {
+    const moduletasks = await ModuleTask.find({ module });
+    return moduletasks;
+  }
 }
 
 export default ModuleClass;

@@ -10,6 +10,7 @@ import ProjectClass from "./ProjectClass";
 import Task from "../interface/task";
 import TaskClass from "./TaskClass";
 import User from "../interface/user";
+import Module from "../interface/module";
 
 const capturedObj = new CapturedTaskClass();
 
@@ -118,6 +119,18 @@ class OrganizedTaskClass {
     }
     if (folder === "project") {
       folderData = await this.project.getProjects(user);
+    }
+    return folderData;
+  }
+
+  async getFoldersOfFolder(
+    user: User,
+    folder: string,
+    folderId: string
+  ): Promise<Array<Task> | Array<Module>> {
+    let folderData;
+    if (folder === "project") {
+      folderData = await this.project.getProjectFolders(user, folderId);
     }
     return folderData;
   }

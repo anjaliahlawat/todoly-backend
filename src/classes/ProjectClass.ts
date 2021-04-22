@@ -1,14 +1,21 @@
 import { pick } from "lodash";
 
-import { Project as ProjectModal } from "../modals/project";
-import User from "../interface/user";
-import Project from "../interface/project";
-import Task from "../interface/task";
-import ProjectTask from "../modals/project-task";
 import Module from "../interface/module";
+import ModuleClass from "./ModuleClass";
 import { Module as ModuleModal } from "../modals/module";
+import Project from "../interface/project";
+import ProjectTask from "../modals/project-task";
+import { Project as ProjectModal } from "../modals/project";
+import Task from "../interface/task";
+import User from "../interface/user";
 
 class ProjectClass {
+  module: ModuleClass;
+
+  constructor() {
+    this.module = new ModuleClass();
+  }
+
   async addProject(project: Project, user: User): Promise<Project> {
     const projectObj = await this.getProject(project.name);
     if (projectObj.length === 0) {
@@ -17,8 +24,8 @@ class ProjectClass {
     return projectObj[0];
   }
 
-  private async getProject(name): Promise<Array<Project>> {
-    return ProjectModal.find({ name });
+  private async getProject(prop: string): Promise<Array<Project>> {
+    return ProjectModal.or([{ name: prop }, { _id: prop }]);
   }
 
   async getAllProjects(user: User): Promise<Array<Project>> {
@@ -37,6 +44,7 @@ class ProjectClass {
 
     for (let i = 0; i < projects.length; i += 1) {
       projectsDetailArr.push({
+        _id: projects[i]._id,
         name: projects[i].name,
         modules: (await this.getProjectModules(projects[i]._id)).length,
         tasks: (await this.getProjectTasks(projects[i]._id)).length,
@@ -48,6 +56,31 @@ class ProjectClass {
   async getProjectModules(project: string): Promise<Array<Module>> {
     const modules = await ModuleModal.find({ project });
     return modules;
+  }
+
+  async getProjectFolders(
+    user: User,
+    projectId: string
+  ): Promise<Array<Module> | Array<Task>> {
+    const projectDetails = [];
+    const modules = await this.getProjectModules(projectId);
+    const projectTasks = await (await this.getProjectTasks(projectId)).length;
+    projectDetails.push({
+      title: "All tasks",
+      subtitle: `${projectTasks} tasks`,
+      total: projectTasks,
+    });
+    for (let i = 0; i < modules.length; i += 1) {
+      const moduleTasks = await (
+        await this.module.getModuleTasks(modules[i]._id)
+      ).length;
+      projectDetails.push({
+        name: modules[i].name,
+        subtitle: `${moduleTasks} tasks`,
+        total: moduleTasks,
+      });
+    }
+    return projectDetails;
   }
 
   async getProjectTasks(project: string): Promise<Array<Task>> {
