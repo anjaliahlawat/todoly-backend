@@ -100,6 +100,26 @@ class ProjectClass {
     const projectTask = await new ProjectTask({ task, project });
     projectTask.save();
   }
+
+  async updateProject(data: Project & Module): Promise<Project | Module> {
+    let updatedData: Project | Module;
+    if (data.type === "project") {
+      updatedData = await ProjectModal.findByIdAndUpdate(
+        { _id: data._id },
+        {
+          name: data.name,
+        }
+      );
+    } else if (data.type === "module") {
+      updatedData = await ModuleModal.findByIdAndUpdate(
+        { _id: data._id },
+        {
+          name: data.name,
+        }
+      );
+    }
+    return updatedData;
+  }
 }
 
 export default ProjectClass;

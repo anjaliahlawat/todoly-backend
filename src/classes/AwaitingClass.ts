@@ -4,6 +4,7 @@ import Task from "../interface/task";
 import TaskClass from "./TaskClass";
 import User from "../interface/user";
 import { WaitingList, validateWaitingList } from "../modals/waitingList";
+import { TaskModal } from "../modals/task";
 
 class AwaitingClass {
   task: TaskClass;
@@ -56,6 +57,16 @@ class AwaitingClass {
       });
     }
     return finalTasks;
+  }
+
+  async updateTask(task: Task): Promise<Task> {
+    const updatedTask = await WaitingList.findByIdAndUpdate(
+      { _id: task._id },
+      {
+        reason: task.reason,
+      }
+    );
+    return updatedTask;
   }
 }
 

@@ -153,6 +153,16 @@ class OrganizedTaskClass {
     await this.cleanUp(task);
     return addedTask;
   }
+
+  async update(folderData: Task & Project): Promise<void> {
+    if (folderData.type === "project" || folderData.type === "module") {
+      await this.project.updateProject(folderData);
+    } else if (folderData.type === "awaiting") {
+      await this.awaiting.updateTask(folderData);
+    } else {
+      await this.task.updateTask(folderData);
+    }
+  }
 }
 
 export default OrganizedTaskClass;

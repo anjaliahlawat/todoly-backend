@@ -86,10 +86,21 @@ class TaskClass {
   }
 
   async updateTask(task: Task): Promise<Task> {
-    const updatedTask = await TaskModal.findByIdAndUpdate(
-      { _id: task._id },
-      task
-    );
+    let updatedTask: Task;
+    if (task.finishDate) {
+      updatedTask = await OrganizedTask.findByIdAndUpdate(
+        { _id: task._id },
+        {
+          finish_date: task.finishDate,
+        }
+      );
+    } else {
+      const organizedTask = await OrganizedTask.findById(task._id);
+      updatedTask = await TaskModal.findByIdAndUpdate(
+        { _id: organizedTask.task },
+        { desc: task.desc }
+      );
+    }
     return updatedTask;
   }
 }

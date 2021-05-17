@@ -4,6 +4,7 @@ import LaterTasks from "../modals/later";
 import Task from "../interface/task";
 import TaskClass from "./TaskClass";
 import User from "../interface/user";
+import { TaskModal } from "../modals/task";
 
 class LaterClass {
   task: TaskClass;

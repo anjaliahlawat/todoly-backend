@@ -13,6 +13,7 @@ interface Project {
   status: string;
   tasks: Array<Task>;
   user: User;
+  type: string;
 }
 
 export default Project;

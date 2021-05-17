@@ -80,4 +80,18 @@ router.post(
   )
 );
 
+router.post(
+  "/folder/edit",
+  asyncMiddleware(
+    async (req: Request, res: Response): Promise<void> => {
+      const { folderData } = req.body;
+      await organizedTaskObj.update(folderData);
+      const response = {
+        result: "success",
+      };
+      res.send(response);
+    }
+  )
+);
+
 module.exports = router;
