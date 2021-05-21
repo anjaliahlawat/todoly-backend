@@ -11,6 +11,7 @@ import Task from "../interface/task";
 import TaskClass from "./TaskClass";
 import User from "../interface/user";
 import Module from "../interface/module";
+import OrganizedTask from "../modals/organizedTask";
 
 const capturedObj = new CapturedTaskClass();
 
@@ -70,7 +71,26 @@ class OrganizedTaskClass {
       await capturedObj.deleteTask(task._id);
     }
     if (task.to === "project") {
-      await this.task.deleteTask(task._id);
+      await this.task.delete(task._id);
+    }
+  }
+
+  async delete(folderData: {
+    ids: Array<string>;
+    type: string;
+  }): Promise<void> {
+    if (
+      folderData.type === "project" ||
+      folderData.type === "module" ||
+      folderData.type === "project-task"
+    ) {
+      await this.project.delete(folderData.ids, folderData.type);
+    } else if (folderData.type === "awaiting") {
+      await this.awaiting.delete(folderData.ids);
+    } else if (folderData.type === "later") {
+      await this.later.delete(folderData.ids);
+    } else {
+      await this.task.deleteOrganizedTasks(folderData.ids);
     }
   }
 

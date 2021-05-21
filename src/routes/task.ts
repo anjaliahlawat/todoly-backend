@@ -94,4 +94,18 @@ router.post(
   )
 );
 
+router.post(
+  "/folder/delete",
+  asyncMiddleware(
+    async (req: Request, res: Response): Promise<void> => {
+      const { folderData } = req.body;
+      await organizedTaskObj.delete(folderData);
+      const response = {
+        result: "success",
+      };
+      res.send(response);
+    }
+  )
+);
+
 module.exports = router;

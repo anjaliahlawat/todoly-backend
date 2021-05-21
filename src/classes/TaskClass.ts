@@ -35,8 +35,19 @@ class TaskClass {
     return savedTasks;
   }
 
-  async deleteTask(taskId: string): Promise<void> {
+  async delete(taskId: string): Promise<void> {
     await TaskModal.findByIdAndRemove(taskId);
+  }
+
+  async deleteOrganizedTasks(ids: Array<string>): Promise<void> {
+    for (let i = 0; i < ids.length; i += 1) {
+      const task = await OrganizedTask.findByIdAndRemove(ids[i]);
+      await this.delete(task.task);
+    }
+  }
+
+  async findByTaskIdAndDeleteOrganizedTask(id: string): Promise<void> {
+    await OrganizedTask.findOneAndRemove({ task: id });
   }
 
   async getAllTasks(user: User): Promise<Array<Task>> {

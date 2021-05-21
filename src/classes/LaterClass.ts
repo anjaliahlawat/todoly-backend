@@ -4,7 +4,6 @@ import LaterTasks from "../modals/later";
 import Task from "../interface/task";
 import TaskClass from "./TaskClass";
 import User from "../interface/user";
-import { TaskModal } from "../modals/task";
 
 class LaterClass {
   task: TaskClass;
@@ -26,6 +25,13 @@ class LaterClass {
     }
     laterTaskObj = await laterTaskObj.save();
     return pick(laterTaskObj, "_id", "task");
+  }
+
+  async delete(ids: Array<string>): Promise<void> {
+    for (let i = 0; i < ids.length; i += 1) {
+      const task = await LaterTasks.findByIdAndRemove(ids[i]);
+      await this.task.delete(task.task);
+    }
   }
 
   async getLaterTaskCount(user: User): Promise<number> {

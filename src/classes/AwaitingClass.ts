@@ -4,7 +4,6 @@ import Task from "../interface/task";
 import TaskClass from "./TaskClass";
 import User from "../interface/user";
 import { WaitingList, validateWaitingList } from "../modals/waitingList";
-import { TaskModal } from "../modals/task";
 
 class AwaitingClass {
   task: TaskClass;
@@ -37,6 +36,13 @@ class AwaitingClass {
     }
     waitingObj = await waitingObj.save();
     return pick(waitingObj, "_id", "reason", "date");
+  }
+
+  async delete(ids: Array<string>): Promise<void> {
+    for (let i = 0; i < ids.length; i += 1) {
+      const task = await WaitingList.findByIdAndRemove(ids[i]);
+      await this.task.delete(task.task);
+    }
   }
 
   async getAwaitingTaskCount(user: User): Promise<number> {

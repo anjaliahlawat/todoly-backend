@@ -57,7 +57,7 @@ router.post(
   asyncMiddleware(
     async (req: Request, res: Response): Promise<void> => {
       const { task } = req.body;
-      await taskObj.deleteTask(task);
+      await taskObj.delete(task);
       await capturedObj.deleteTask(task);
       res.send({ result: "success" });
     }
