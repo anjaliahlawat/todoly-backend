@@ -19,7 +19,7 @@ class UserClass {
     return user.save();
   }
 
-  getUserId(email: string): User {
+  async getUserId(email: string): Promise<User> {
     return UserModal.findOne({ email });
   }
 

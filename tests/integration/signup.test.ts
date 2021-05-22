@@ -9,15 +9,15 @@ describe("/api/register", () => {
   beforeEach(() => {});
   afterEach(async () => {
     server.close();
-    await User.remove({});
+    // await User.remove({});
   });
 
   it("should register new user on valid credentials", async () => {
     const formData = {
-      username: "Shuchi Aggarwal",
-      phoneNumber: "9320112345",
-      email: "shuchi@gmail.com",
-      password: "12345678",
+      username: "Anjali Ahlawat",
+      phoneNumber: "9654081639",
+      email: "anjali@gmail.com",
+      password: "87654321",
     };
 
     const res = await request(server).post("/api/register").send(formData);
@@ -25,7 +25,7 @@ describe("/api/register", () => {
     expect(res.body).toHaveProperty("user.username", formData.username);
   });
 
-  it.only("should return error if email id is already registered", async () => {
+  it("should return error if email id is already registered", async () => {
     const formData = {
       username: "Ankur Satya",
       phoneNumber: "9891972726",
