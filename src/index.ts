@@ -18,4 +18,4 @@ const port = process.env.PORT || 4000;
 // eslint-disable-next-line no-console
 const server = app.listen(port, () => console.log(`running on ${port}`));
 
-module.exports = server;
+export default server;
