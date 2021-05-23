@@ -1,8 +1,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as request from "supertest";
 
-import server from "../../src/index";
-import { User } from "../../src/modals/users";
+import server from "../../../src/index";
+import { User } from "../../../src/modals/users";
 
 describe("/api/register", () => {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
