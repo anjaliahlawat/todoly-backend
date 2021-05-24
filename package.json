@@ -25,7 +25,8 @@
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
-    "mongoose": "^5.9.7"
+    "mongoose": "^5.9.7",
+    "pretty-format": "25.1.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.0.1",
@@ -41,6 +42,7 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-prettier": "^3.3.1",
     "husky": "^4.3.8",
     "jest": "^26.6.3",

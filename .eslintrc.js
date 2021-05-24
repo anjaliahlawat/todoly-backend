@@ -7,8 +7,9 @@ module.exports = {
     "airbnb-base",
     "plugin:prettier/recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:jest/recommended",
   ],
-  plugins: ["prettier", "@typescript-eslint"],
+  plugins: ["prettier", "@typescript-eslint", "jest"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 9,
@@ -21,7 +22,7 @@ module.exports = {
   settings: {
     "import/resolver": {
       node: {
-        extensions: [".js", ".ts"],
+        extensions: [".js", ".ts", ".d.ts"],
       },
     },
   },
