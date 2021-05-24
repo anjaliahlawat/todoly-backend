@@ -25,8 +25,7 @@
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
-    "mongoose": "^5.9.7",
-    "pretty-format": "25.1.0"
+    "mongoose": "^5.9.7"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.0.1",
