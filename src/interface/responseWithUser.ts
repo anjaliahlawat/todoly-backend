@@ -1,5 +1,5 @@
 import { Response } from "express";
-import User from "./user";
+import { User } from "../models/users";
 
 interface ResponseWithUser extends Response {
   user: User;

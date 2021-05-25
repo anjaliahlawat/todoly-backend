@@ -1,4 +1,4 @@
-import User from "./user";
+import { User } from "../models/users";
 
 interface Folder {
   _id: string;
