@@ -1,21 +1,24 @@
-import Module from "../interface/module";
 import ModuleClass from "./ModuleClass";
-import { Module as ModuleModal } from "../modals/module";
-import Project from "../interface/project";
-import ProjectTask from "../modals/project-task";
-import { Project as ProjectModal } from "../modals/project";
-import Task from "../interface/task";
+import { ModuleModel, Module } from "../models/module";
+import { ProjectTaskModel, ProjectTask } from "../models/project-task";
+import { ProjectModel, Project } from "../models/project";
+import { Task } from "../models/task";
 import TaskClass from "./TaskClass";
-import User from "../interface/user";
+import { User } from "../models/users";
+import { OrganizedTask } from "../models/organizedTask";
+import OrganizedTaskClass from "./OrganizedTaskClass";
 
 class ProjectClass {
   module: ModuleClass;
+
+  organizedTask: OrganizedTaskClass;
 
   task: TaskClass;
 
   constructor() {
     this.module = new ModuleClass();
     this.task = new TaskClass();
+    this.organizedTask = new OrganizedTaskClass();
   }
 
   async addProject(project: Project, user: User): Promise<Project> {
@@ -26,13 +29,13 @@ class ProjectClass {
     return projectObj[0];
   }
 
-  async addTaskToProject(project: Project, task: Task): Promise<void> {
-    const projectTask = await new ProjectTask({ task, project });
+  async addTaskToProject(project: Project, task: OrganizedTask): Promise<void> {
+    const projectTask = await new ProjectTaskModel({ task, project });
     projectTask.save();
   }
 
   private async createProject(project: Project, user: User): Promise<Project> {
-    const projectObj = new ProjectModal({
+    const projectObj = new ProjectModel({
       name: project.name,
       user,
     });
@@ -56,37 +59,41 @@ class ProjectClass {
   }
 
   async deleteProject(id: string): Promise<void> {
-    await ProjectModal.findByIdAndRemove(id);
+    await ProjectModel.findByIdAndRemove(id);
   }
 
   async deleteProjectTasks(ids: Array<string>): Promise<void> {
     for (let i = 0; i < ids.length; i += 1) {
-      const projectTask = await ProjectTask.findByIdAndRemove(ids[i]);
-      await this.task.delete(projectTask.task);
-      await this.task.findByTaskIdAndDeleteOrganizedTask(projectTask.task);
+      const projectTask = await ProjectTaskModel.findByIdAndRemove(ids[i]);
+      await this.task.delete(projectTask.task.toString());
+      await this.organizedTask.findByTaskIdAndDeleteTask(
+        projectTask.task.toString()
+      );
     }
   }
 
   async findByProjectIdAndDeleteProjectTasks(projectId: string): Promise<void> {
-    const projectTasks = await ProjectTask.find({ project: projectId });
+    const projectTasks = await ProjectTaskModel.find({ project: projectId });
     for (let i = 0; i < projectTasks.length; i += 1) {
-      await ProjectTask.findByIdAndRemove(projectTasks[i]._id);
-      await this.task.delete(projectTasks[i].task);
-      await this.task.findByTaskIdAndDeleteOrganizedTask(projectTasks[i].task);
+      await ProjectTaskModel.findByIdAndRemove(projectTasks[i]._id);
+      await this.task.delete(projectTasks[i].task.toString());
+      await this.organizedTask.findByTaskIdAndDeleteTask(
+        projectTasks[i].task.toString()
+      );
     }
   }
 
   private async getProject(prop: string): Promise<Array<Project>> {
-    return ProjectModal.find().or([{ name: prop }, { _id: prop }]);
+    return ProjectModel.find().or([{ name: prop }, { _id: prop }]);
   }
 
   async getAllProjects(user: User): Promise<Array<Project>> {
-    const projects = await ProjectModal.find({ user });
+    const projects = await ProjectModel.find({ user: user._id });
     return projects;
   }
 
   async getProjectCount(user: User): Promise<number> {
-    const count = await ProjectModal.where({ user }).count();
+    const count = await ProjectModel.where({ user }).count();
     return count;
   }
 
@@ -106,7 +113,7 @@ class ProjectClass {
   }
 
   async getProjectModules(project: string): Promise<Array<Module>> {
-    const modules = await ModuleModal.find({ project });
+    const modules = await ModuleModel.find({ project });
     return modules;
   }
 
@@ -135,28 +142,28 @@ class ProjectClass {
     return projectDetails;
   }
 
-  async getProjectTasks(project: string): Promise<Array<Task>> {
-    const tasks = await ProjectTask.find({ project });
+  async getProjectTasks(project: string): Promise<Array<ProjectTask>> {
+    const tasks = await ProjectTaskModel.find({ project });
     return tasks;
   }
 
   async updateProject(data: Project & Module): Promise<Project | Module> {
     let updatedData: Project | Module;
-    if (data.type === "project") {
-      updatedData = await ProjectModal.findByIdAndUpdate(
-        { _id: data._id },
-        {
-          name: data.name,
-        }
-      );
-    } else if (data.type === "module") {
-      updatedData = await ModuleModal.findByIdAndUpdate(
-        { _id: data._id },
-        {
-          name: data.name,
-        }
-      );
-    }
+    // if (data.type === "project") {
+    //   updatedData = await ProjectModel.findByIdAndUpdate(
+    //     { _id: data._id },
+    //     {
+    //       name: data.name,
+    //     }
+    //   );
+    // } else if (data.type === "module") {
+    //   updatedData = await ModuleModel.findByIdAndUpdate(
+    //     { _id: data._id },
+    //     {
+    //       name: data.name,
+    //     }
+    //   );
+    // }
     return updatedData;
   }
 }

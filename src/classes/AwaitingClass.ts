@@ -1,9 +1,16 @@
 import { pick } from "lodash";
 
-import Task from "../interface/task";
+import { Task } from "../models/task";
 import TaskClass from "./TaskClass";
-import User from "../interface/user";
-import { WaitingList, validateWaitingList } from "../modals/waitingList";
+import { User } from "../models/users";
+import {
+  WaitingListModel,
+  validateWaitingList,
+  WaitingTask,
+} from "../models/waitingList";
+import { OrganizedTask } from "../models/organizedTask";
+
+type AwaitingRequestObj = Task & OrganizedTask & { reason: string };
 
 class AwaitingClass {
   task: TaskClass;
@@ -12,22 +19,26 @@ class AwaitingClass {
     this.task = new TaskClass();
   }
 
-  async addTaskInWaiting(task: Task, user: User): Promise<Task> {
+  async addTaskInWaiting(
+    task: AwaitingRequestObj,
+    from: string,
+    user: User
+  ): Promise<Task> {
     let waitingObj;
 
     const { error } = validateWaitingList(pick(task, ["reason"]));
     if (error) throw error.details[0].message;
 
-    if (task.from === "captured") {
-      waitingObj = await new WaitingList({
+    if (from === "captured") {
+      waitingObj = await new WaitingListModel({
         task: task._id,
         reason: task.reason,
         date: task.finishDate,
         user,
       });
     }
-    if (task.from === "organized") {
-      waitingObj = await new WaitingList({
+    if (from === "organized") {
+      waitingObj = await new WaitingListModel({
         organizedTask: task._id,
         reason: task.reason,
         date: task.finishDate,
@@ -40,33 +51,33 @@ class AwaitingClass {
 
   async delete(ids: Array<string>): Promise<void> {
     for (let i = 0; i < ids.length; i += 1) {
-      const task = await WaitingList.findByIdAndRemove(ids[i]);
-      await this.task.delete(task.task);
+      const task = await WaitingListModel.findByIdAndRemove(ids[i]);
+      await this.task.delete(task.task.toString());
     }
   }
 
   async getAwaitingTaskCount(user: User): Promise<number> {
-    const count = await WaitingList.where({ user }).count();
+    const count = await WaitingListModel.where({ user }).count();
     return count;
   }
 
   async getAwaitingTasks(user: User): Promise<Array<Task>> {
-    const waitingtasks = await WaitingList.find({ user });
+    const waitingtasks = await WaitingListModel.find({ user: user._id });
     const finalTasks = [];
     for (let i = 0; i < waitingtasks.length; i += 1) {
       finalTasks.push({
-        ...pick(await this.task.getTaskDetails(waitingtasks[i].task), [
-          "desc",
-          "type",
-        ]),
+        ...pick(
+          await this.task.getTaskDetails(waitingtasks[i].task.toString()),
+          ["desc", "type"]
+        ),
         ...pick(waitingtasks[i], ["_id", "reason", "date"]),
       });
     }
     return finalTasks;
   }
 
-  async updateTask(task: Task): Promise<Task> {
-    const updatedTask = await WaitingList.findByIdAndUpdate(
+  async updateTask(task: AwaitingRequestObj): Promise<WaitingTask> {
+    const updatedTask = await WaitingListModel.findByIdAndUpdate(
       { _id: task._id },
       {
         reason: task.reason,

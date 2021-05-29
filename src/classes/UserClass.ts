@@ -1,13 +1,12 @@
 import { compare, genSalt, hash } from "bcrypt";
-import User from "../interface/user";
-import { User as UserModal, validateUser } from "../modals/users";
+import { UserModel, validateUser, User } from "../models/users";
 
 class UserClass {
   async createUser(userData: User): Promise<User> {
     const { error } = validateUser(userData);
     if (error) return error.details[0].message;
 
-    const user = new UserModal({
+    const user = new UserModel({
       username: userData.username,
       phoneNumber: userData.phoneNumber,
       email: userData.email,
@@ -20,7 +19,7 @@ class UserClass {
   }
 
   async getUserId(email: string): Promise<User> {
-    return UserModal.findOne({ email });
+    return UserModel.findOne({ email });
   }
 
   async loginUser(email: string, password: string): Promise<string> {
