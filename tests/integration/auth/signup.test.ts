@@ -1,8 +1,10 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
+import * as dotenv from "dotenv";
 import * as request from "supertest";
 
+import { get } from "config";
 import server from "../../../src/index";
-import { User } from "../../../src/modals/users";
+
+dotenv.config();
 
 describe("/api/register", () => {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -12,12 +14,15 @@ describe("/api/register", () => {
     // await User.remove({});
   });
 
+  const users = get("users");
+  const { password } = process.env;
+
   it("should register new user on valid credentials", async () => {
     const formData = {
-      username: "Anjali Ahlawat",
-      phoneNumber: "9654081639",
-      email: "anjali@gmail.com",
-      password: "87654321",
+      username: users.username,
+      phoneNumber: users.phoneNumber,
+      email: users.email,
+      password,
     };
 
     const res = await request(server).post("/api/register").send(formData);
@@ -29,8 +34,8 @@ describe("/api/register", () => {
     const formData = {
       username: "Ankur Satya",
       phoneNumber: "9891972726",
-      email: "anjali@gmail.com",
-      password: "87654321",
+      email: users.email,
+      password,
     };
 
     const res = await request(server).post("/api/register").send(formData);
