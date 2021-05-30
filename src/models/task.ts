@@ -33,8 +33,8 @@ const TaskModel = model<TaskDoc>("Task", taskSchema);
 
 function validateTask(task: Task): JoiObject {
   const schema = {
-    desc: string().min(1).max(200).required(),
-    type: string().required(),
+    desc: string().min(3).max(200).required(),
+    type: string().min(3).required(),
   };
 
   return validate(task, schema);

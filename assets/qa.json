@@ -1,0 +1,36 @@
+{
+    "users": {
+        "email": "sample-account@gmail.com",
+        "username": "Sample Account",
+        "phoneNumber": "9891954321"
+    },
+    "captureTask": [
+        {
+            "type": "text",
+            "desc": "Create PLM app"
+        },
+        {
+            "type": "text",
+            "desc": "Search dutch website for rebate"
+        },
+        {
+            "type": "text",
+            "desc": "Upload documents for visa application"
+        },
+        {
+            "type": "text",
+            "desc": "Read about income tax"
+        },
+        {
+            "type": "text",
+            "desc": "Buy cashews"
+        },
+        {
+            "type": "text",
+            "desc": "Call immigration dept"
+        }
+    ],
+    "simpleTask": [
+
+    ]
+}

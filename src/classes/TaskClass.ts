@@ -10,7 +10,7 @@ class TaskClass {
     for (let i = 0; i < tasks.length; i += 1) {
       if (tasks[i].type === "text") {
         const { error } = validateTask(pick(tasks[i], ["desc", "type"]));
-        if (error) throw error.details[0].message;
+        if (error) throw error;
 
         let newTask = new TaskModel({
           desc: tasks[i].desc,
