@@ -6,7 +6,7 @@ import { CapturedTaskModel } from "../../../src/models/captured";
 import { TaskModel } from "../../../src/models/task";
 import { UserModel } from "../../../src/models/users";
 
-describe("/api/auth", () => {
+describe("/api/capture-task", () => {
   let token: string;
   beforeEach(() => {
     token = new UserModel().getAuthToken();
@@ -74,46 +74,6 @@ describe("/api/auth", () => {
     expect(task).not.toBeNull();
     const capturedTask = await CapturedTaskModel.find({ task: task[0]._id });
     expect(capturedTask).not.toBeNull();
-  });
-
-  it("should edit capture task in database", async () => {
-    // add captured task in db
-    const formData = {
-      email: "anjali@gmail.com",
-      tasks: [
-        {
-          type: captureTask[1].type,
-          desc: captureTask[1].desc,
-        },
-      ],
-    };
-    const res = await request(server)
-      .post("/api/capture-task/add")
-      .set("x-auth-token", token)
-      .send(formData);
-    expect(res.status).toBe(200);
-
-    const task = await TaskModel.find({ desc: captureTask[1].desc });
-    expect(task).not.toBeNull();
-
-    // update the added task
-    const updatedDesc = "Create PLM web application";
-
-    const formData2 = {
-      task: {
-        _id: task[0]._id,
-        desc: updatedDesc,
-      },
-    };
-
-    const res2 = await request(server)
-      .post("/api/capture-task/edit")
-      .set("x-auth-token", token)
-      .send(formData2);
-    expect(res2.status).toBe(200);
-
-    const updatedTask = await TaskModel.find({ desc: updatedDesc });
-    expect(updatedTask).not.toBeNull();
   });
 
   it("should delete capture task in database", async () => {

@@ -1,5 +1,5 @@
 import { pick } from "lodash";
-import { CapturedTaskModel } from "../models/captured";
+import { CapturedTaskModel, CapturedTask } from "../models/captured";
 import { Task } from "../models/task";
 
 class CapturedTaskClass {
@@ -41,6 +41,10 @@ class CapturedTaskClass {
 
   async delete(taskId: string): Promise<void> {
     await CapturedTaskModel.findOneAndRemove({ task: taskId });
+  }
+
+  async isTaskPresent(_id: string): Promise<CapturedTask> {
+    return CapturedTaskModel.findById(_id);
   }
 }
 

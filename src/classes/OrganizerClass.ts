@@ -1,4 +1,5 @@
 import { pick } from "lodash";
+import { Types } from "mongoose";
 
 import AwaitingClass from "./AwaitingClass";
 import CapturedTaskClass from "./CapturedClass";
@@ -185,6 +186,15 @@ class OrganizerClass {
     to: string
   ): Promise<Task | Project> {
     let addedTask;
+
+    if (!(await this.validateId(task._id))) {
+      const err = {
+        code: "404",
+        message: "ID invalid",
+      };
+      throw err;
+    }
+
     if (to.includes("simple-task")) {
       addedTask = await this.organizedTask.addTask(task, task.finishDate, to);
     }
@@ -202,15 +212,20 @@ class OrganizerClass {
     return addedTask;
   }
 
-  // async update(folderData: Task & Project): Promise<void> {
-  //   // if (folderData.type === "project" || folderData.type === "module") {
-  //   //   await this.project.updateProject(folderData);
-  //   // } else if (folderData.type === "awaiting") {
-  //   //   await this.awaiting.updateTask(folderData);
-  //   // } else {
-  //   //   await this.task.updateTask(folderData);
-  //   // }
-  // }
+  async validateId(_id: string): Promise<boolean> {
+    if (Types.ObjectId.isValid(_id)) return true;
+    return false;
+  }
+
+  async update(folderData: Task & Project): Promise<void> {
+    // if (folderData.type === "project" || folderData.type === "module") {
+    //   await this.project.updateProject(folderData);
+    // } else if (folderData.type === "awaiting") {
+    //   await this.awaiting.updateTask(folderData);
+    // } else {
+    // await this.organizedTask.updateTask(folderData);
+    // }
+  }
 }
 
 export default OrganizerClass;

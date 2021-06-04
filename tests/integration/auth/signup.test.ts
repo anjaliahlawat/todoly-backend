@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv";
 import * as request from "supertest";
 
-import { get } from "config";
+import * as assets from "../../../assets/qa.json";
 import server from "../../../src/index";
 
 dotenv.config();
@@ -9,12 +9,12 @@ dotenv.config();
 describe("/api/register", () => {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   beforeEach(() => {});
-  afterEach(async () => {
+  afterEach(() => {
     server.close();
     // await User.remove({});
   });
 
-  const users = get("users");
+  const { users } = assets;
   const { password } = process.env;
 
   it("should register new user on valid credentials", async () => {
