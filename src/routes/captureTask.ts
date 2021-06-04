@@ -1,18 +1,20 @@
 import { Request, Response, Router } from "express";
 
 import asyncMiddleware from "../middleware/async";
-import UserClass from "../classes/UserClass";
+import auth from "../middleware/auth";
 import CapturedTaskClass from "../classes/CapturedClass";
 import TaskClass from "../classes/TaskClass";
+import UserClass from "../classes/UserClass";
 
 const router = Router();
 
-const userObj = new UserClass();
 const capturedObj = new CapturedTaskClass();
 const taskObj = new TaskClass();
+const userObj = new UserClass();
 
 router.post(
   "/add",
+  auth,
   asyncMiddleware(async (req: Request, res: Response): Promise<void> => {
     const { email, tasks } = req.body;
     const user = await userObj.getUserId(email);
@@ -28,6 +30,7 @@ router.post(
 
 router.post(
   "/list",
+  auth,
   asyncMiddleware(async (req: Request, res: Response): Promise<void> => {
     const { email } = req.body;
     const user = await userObj.getUserId(email);
@@ -39,6 +42,7 @@ router.post(
 
 router.post(
   "/edit",
+  auth,
   asyncMiddleware(async (req: Request, res: Response): Promise<void> => {
     const { task } = req.body;
     const updatedTask = await taskObj.updateTask(task);
@@ -48,6 +52,7 @@ router.post(
 
 router.post(
   "/delete",
+  auth,
   asyncMiddleware(async (req: Request, res: Response): Promise<void> => {
     const { tasks } = req.body;
     await taskObj.deleteAll(tasks);

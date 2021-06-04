@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 
 import asyncMiddleware from "../middleware/async";
+import auth from "../middleware/auth";
 import OrganizerClass from "../classes/OrganizerClass";
 import UserClass from "../classes/UserClass";
 
@@ -11,6 +12,7 @@ const userObj = new UserClass();
 
 router.post(
   "/add",
+  auth,
   asyncMiddleware(async (req: Request, res: Response): Promise<void> => {
     const { email, from, to, task } = req.body;
     const user = await userObj.getUserId(email);
@@ -25,6 +27,7 @@ router.post(
 
 router.post(
   "/folders",
+  auth,
   asyncMiddleware(async (req: Request, res: Response): Promise<void> => {
     const { email } = req.body;
     const user = await userObj.getUserId(email);
@@ -39,6 +42,7 @@ router.post(
 
 router.post(
   "/folders/:folder",
+  auth,
   asyncMiddleware(async (req: Request, res: Response): Promise<void> => {
     const { email } = req.body;
     const user = await userObj.getUserId(email);
@@ -56,6 +60,7 @@ router.post(
 
 router.post(
   "/folders/:folder/:folderName",
+  auth,
   asyncMiddleware(async (req: Request, res: Response): Promise<void> => {
     const { email, folderId } = req.body;
     const user = await userObj.getUserId(email);
@@ -74,18 +79,20 @@ router.post(
 
 router.post(
   "/folder/edit",
+  auth,
   asyncMiddleware(async (req: Request, res: Response): Promise<void> => {
-    // const { folderData } = req.body;
-    // await organizerObj.update(folderData);
-    // const response = {
-    //   result: "success",
-    // };
-    // res.send(response);
+    const { folderData } = req.body;
+    await organizerObj.update(folderData);
+    const response = {
+      result: "success",
+    };
+    res.send(response);
   })
 );
 
 router.post(
   "/folder/delete",
+  auth,
   asyncMiddleware(async (req: Request, res: Response): Promise<void> => {
     const { folderData } = req.body;
     await organizerObj.delete(folderData);
