@@ -1,5 +1,7 @@
 import { pick } from "lodash";
 
+import { isValidDate } from "../util/dateFuncs";
+import { OrganizedTask } from "../models/organizedTask";
 import { Task } from "../models/task";
 import TaskClass from "./TaskClass";
 import { User } from "../models/users";
@@ -8,7 +10,6 @@ import {
   validateWaitingList,
   WaitingTask,
 } from "../models/waitingList";
-import { OrganizedTask } from "../models/organizedTask";
 
 type AwaitingRequestObj = Task & OrganizedTask & { reason: string };
 
@@ -27,7 +28,15 @@ class AwaitingClass {
     let waitingObj;
 
     const { error } = validateWaitingList(pick(task, ["reason"]));
-    if (error) throw error.details[0].message;
+    if (error) throw error;
+
+    if (!task.finishDate || !isValidDate(task.finishDate)) {
+      const err = {
+        code: "400",
+        message: "Invalid Date",
+      };
+      throw err;
+    }
 
     if (from === "captured") {
       waitingObj = await new WaitingListModel({

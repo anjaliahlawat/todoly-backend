@@ -1,6 +1,7 @@
 import { pick } from "lodash";
 
 import { OrganizedTaskModel, OrganizedTask } from "../models/organizedTask";
+import { isValidDate } from "../util/dateFuncs";
 import TaskClass from "./TaskClass";
 import { Task } from "../models/task";
 import { User } from "../models/users";
@@ -14,9 +15,16 @@ class OrganizedTaskClass {
 
   async addTask(
     task: Task,
-    finishDate: Date,
+    finishDate: Date | string,
     path: string
   ): Promise<OrganizedTask> {
+    if (!finishDate || !isValidDate(finishDate)) {
+      const err = {
+        code: "400",
+        message: "Invalid date",
+      };
+      throw err;
+    }
     const taskObj = new OrganizedTaskModel({
       task,
       path,
@@ -74,7 +82,14 @@ class OrganizedTaskClass {
     return organizedTasks;
   }
 
-  async updateTask(task: OrganizedTask): Promise<OrganizedTask> {
+  async updateTask(task: OrganizedTask & Task): Promise<OrganizedTask> {
+    if (!isValidDate(task.finishDate)) {
+      const err = {
+        code: "400",
+        message: "Invalid date",
+      };
+      throw err;
+    }
     const updatedTask = await OrganizedTaskModel.findByIdAndUpdate(
       { _id: task._id },
       {
