@@ -23,6 +23,9 @@ const moduleTaskSchema = new Schema({
   },
 });
 
-const ModuleTask = model<ModuleTaskDoc>("ModuleTask", moduleTaskSchema);
+const ModuleTaskModel = model<ModuleTaskDoc>(
+  "ModuleTaskModel",
+  moduleTaskSchema
+);
 
-export default ModuleTask;
+export { ModuleTaskModel, ModuleTask };

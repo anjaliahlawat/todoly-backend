@@ -46,7 +46,7 @@ const ProjectModel = model<ProjectDoc>("Project", projectSchema);
 
 function validateProject(project: Project): JoiObject {
   const schema = {
-    name: string().min(1).max(200).required(),
+    name: string().min(3).max(200).required(),
   };
 
   return validate(project, schema);
