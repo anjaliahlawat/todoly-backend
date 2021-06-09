@@ -1,7 +1,9 @@
+import { pick } from "lodash";
+
 import ModuleClass from "./ModuleClass";
 import { ModuleModel, Module } from "../models/module";
 import { ProjectTaskModel, ProjectTask } from "../models/project-task";
-import { ProjectModel, Project } from "../models/project";
+import { ProjectModel, Project, validateProject } from "../models/project";
 import { Task } from "../models/task";
 import TaskClass from "./TaskClass";
 import { User } from "../models/users";
@@ -22,7 +24,10 @@ class ProjectClass {
   }
 
   async addProject(project: Project, user: User): Promise<Project> {
-    const projectObj = await this.getProject(project.name);
+    const { error } = validateProject(pick(project, ["name"]));
+    if (error) throw error;
+
+    const projectObj = await this.getProject(project.name, "name");
     if (projectObj.length === 0) {
       return this.createProject(project, user);
     }
@@ -83,8 +88,11 @@ class ProjectClass {
     }
   }
 
-  private async getProject(prop: string): Promise<Array<Project>> {
-    return ProjectModel.find().or([{ name: prop }, { _id: prop }]);
+  private async getProject(
+    value: string,
+    prop: string
+  ): Promise<Array<Project>> {
+    return ProjectModel.find({ [prop]: value });
   }
 
   async getAllProjects(user: User): Promise<Array<Project>> {

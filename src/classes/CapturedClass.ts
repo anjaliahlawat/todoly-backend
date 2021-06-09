@@ -35,12 +35,12 @@ class CapturedTaskClass {
 
   async deleteAll(tasks: Array<Task>): Promise<void> {
     for (let i = 0; i < tasks.length; i += 1) {
-      await this.delete(tasks[i]._id);
+      await this.delete("task", tasks[i]._id);
     }
   }
 
-  async delete(taskId: string): Promise<void> {
-    await CapturedTaskModel.findOneAndRemove({ task: taskId });
+  async delete(prop: string, taskId: string): Promise<CapturedTask> {
+    return CapturedTaskModel.findOneAndRemove({ [prop]: taskId });
   }
 
   async isTaskPresent(_id: string): Promise<CapturedTask> {

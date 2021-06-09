@@ -1,5 +1,5 @@
 import { ModuleModel, Module } from "../models/module";
-import ModuleTask from "../models/module-task";
+import { ModuleTaskModel, ModuleTask } from "../models/module-task";
 import { OrganizedTask } from "../models/organizedTask";
 import { Project } from "../models/project";
 import OrganizedTaskClass from "./OrganizedTaskClass";
@@ -39,7 +39,7 @@ class ModuleClass {
   }
 
   async addTaskToModule(module: Module, task: OrganizedTask): Promise<void> {
-    const moduleTask = await new ModuleTask({ task, module });
+    const moduleTask = await new ModuleTaskModel({ task, module });
     moduleTask.save();
   }
 
@@ -51,7 +51,7 @@ class ModuleClass {
   }
 
   async deleteModuleTask(id: string): Promise<void> {
-    const moduleTask = await ModuleTask.findOneAndRemove({ module: id });
+    const moduleTask = await ModuleTaskModel.findOneAndRemove({ module: id });
     await this.task.delete(moduleTask.task.toString());
     await this.organizedTask.findByTaskIdAndDeleteTask(
       moduleTask.task.toString()
@@ -68,7 +68,7 @@ class ModuleClass {
   }
 
   async getModuleTasks(module: string): Promise<Array<ModuleTask>> {
-    const moduletasks = await ModuleTask.find({ module });
+    const moduletasks = await ModuleTaskModel.find({ module });
     return moduletasks;
   }
 }

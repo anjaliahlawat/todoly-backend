@@ -62,6 +62,7 @@ class OrganizerClass {
         const moduleObj = await this.module.addModule(modules[i], projectObj);
 
         const moduleTasks = await this.task.createTask(modules[i].tasks, user);
+        console.log(JSON.stringify(moduleTasks, null, 2));
 
         for (let j = 0; j < moduleTasks.length; j += 1) {
           const organizedTaskObj = await this.organizedTask.addTask(
@@ -91,11 +92,12 @@ class OrganizerClass {
   }
 
   private async cleanUp(task: Task, from: string, to: string) {
+    let capturedTask: any;
     if (from === "captured") {
-      await capturedObj.delete(task._id);
+      capturedTask = await capturedObj.delete("_id", task._id);
     }
-    if (to === "project") {
-      await this.task.delete(task._id);
+    if (to.includes("project")) {
+      await this.task.delete(capturedTask.task);
     }
   }
 
