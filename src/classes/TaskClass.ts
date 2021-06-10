@@ -19,9 +19,10 @@ class TaskClass {
         });
         newTask = await newTask.save();
         savedTasks.push(newTask);
-        console.log(JSON.stringify(savedTasks, null, 2));
+        console.log("1", JSON.stringify(savedTasks, null, 2));
       }
     }
+    console.log("2", JSON.stringify(savedTasks, null, 2));
     return savedTasks;
   }
 

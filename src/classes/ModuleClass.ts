@@ -39,8 +39,9 @@ class ModuleClass {
   }
 
   async addTaskToModule(module: Module, task: OrganizedTask): Promise<void> {
-    const moduleTask = await new ModuleTaskModel({ task, module });
-    moduleTask.save();
+    const moduleTask = new ModuleTaskModel({ task, module });
+    console.log(moduleTask);
+    await moduleTask.save();
   }
 
   async deleteModules(ids: Array<string>): Promise<void> {

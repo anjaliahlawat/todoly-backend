@@ -62,7 +62,7 @@ class OrganizerClass {
         const moduleObj = await this.module.addModule(modules[i], projectObj);
 
         const moduleTasks = await this.task.createTask(modules[i].tasks, user);
-        console.log(JSON.stringify(moduleTasks, null, 2));
+        // console.log(JSON.stringify(moduleTasks, null, 2));
 
         for (let j = 0; j < moduleTasks.length; j += 1) {
           const organizedTaskObj = await this.organizedTask.addTask(
