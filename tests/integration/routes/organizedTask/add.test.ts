@@ -274,9 +274,8 @@ describe("Organize task Api / Add", () => {
 
     // task reference & project reference must be saved in project-task model
     const projectTask = await ProjectTaskModel.find({
-      task: savedOrgTask[0].task,
+      task: savedOrgTask[0]._id,
     });
-    console.log(projectTask);
     expect(projectTask).not.toEqual([]);
 
     const capturedTask = await CapturedTaskModel.findById(capturedTaskId);
@@ -302,7 +301,7 @@ describe("Organize task Api / Add", () => {
               ...project[1].modules[0],
               tasks: [
                 {
-                  ...project[1].modules[0],
+                  ...project[1].modules[0].tasks[0],
                   finishDate: addDaysToCurrentDate(3),
                 },
               ],
@@ -331,24 +330,23 @@ describe("Organize task Api / Add", () => {
     const savedModuleTask = await ModuleTaskModel.find({
       module: savedModule[0]._id,
     });
-    console.log(JSON.stringify(savedModuleTask, null, 2));
     expect(savedModuleTask).not.toEqual([]);
 
-    // const savedOrgTask = await OrganizedTaskModel.find({
-    //   path: project[1].modules[0].path,
-    // });
-    // expect(savedOrgTask).not.toBeNull();
+    const savedOrgTask = await OrganizedTaskModel.find({
+      path: project[1].modules[0].path,
+    });
+    expect(savedOrgTask).not.toEqual([]);
 
     // new reference of task should be saved once project is created & task is saved
-    // const savedTask = await TaskModel.findById(savedOrgTask[0].task);
-    // expect(savedTask).not.toBeNull();
+    const savedTask = await TaskModel.findById(savedOrgTask[0].task);
+    expect(savedTask).not.toBeNull();
 
-    // const capturedTask = await CapturedTaskModel.findById(capturedTaskId);
-    // expect(capturedTask).toBeNull();
+    const capturedTask = await CapturedTaskModel.findById(capturedTaskId);
+    expect(capturedTask).toBeNull();
 
-    // // old reference of task saved in task model must be deleted as new reference
-    // // is created on creating project
-    // const oldTask = await TaskModel.findById(taskId);
-    // expect(oldTask).toBeNull();
+    // old reference of task saved in task model must be deleted as new reference
+    // is created on creating project
+    const oldTask = await TaskModel.findById(taskId);
+    expect(oldTask).toBeNull();
   });
 });

@@ -60,9 +60,7 @@ class OrganizerClass {
     if (modules.length > 0) {
       for (let i = 0; i < modules.length; i += 1) {
         const moduleObj = await this.module.addModule(modules[i], projectObj);
-
         const moduleTasks = await this.task.createTask(modules[i].tasks, user);
-        // console.log(JSON.stringify(moduleTasks, null, 2));
 
         for (let j = 0; j < moduleTasks.length; j += 1) {
           const organizedTaskObj = await this.organizedTask.addTask(
@@ -77,7 +75,6 @@ class OrganizerClass {
 
     if (tasks.length > 0) {
       const projectTasks = await this.task.createTask(project.tasks, user);
-
       for (let i = 0; i < projectTasks.length; i += 1) {
         const organizedTaskObj = await this.organizedTask.addTask(
           projectTasks[i],

@@ -18,11 +18,9 @@ class TaskClass {
           user,
         });
         newTask = await newTask.save();
-        savedTasks.push(newTask);
-        console.log("1", JSON.stringify(savedTasks, null, 2));
+        savedTasks.push(pick(newTask, ["_id", "type", "desc"]));
       }
     }
-    console.log("2", JSON.stringify(savedTasks, null, 2));
     return savedTasks;
   }
 

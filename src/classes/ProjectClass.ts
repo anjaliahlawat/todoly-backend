@@ -35,8 +35,8 @@ class ProjectClass {
   }
 
   async addTaskToProject(project: Project, task: OrganizedTask): Promise<void> {
-    const projectTask = await new ProjectTaskModel({ task, project });
-    projectTask.save();
+    const projectTask = new ProjectTaskModel({ task, project });
+    await projectTask.save();
   }
 
   private async createProject(project: Project, user: User): Promise<Project> {
