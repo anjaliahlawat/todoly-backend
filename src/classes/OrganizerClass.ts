@@ -28,6 +28,15 @@ type ProjectRequestObj = Project & {
 
 type TaskRequestObj = TaskObj & { project: ProjectRequestObj; reason: string };
 
+type FolderDataRequestObj = {
+  _id: string;
+  type: string;
+  desc: string;
+  finishDate: Date;
+  name: string;
+  reason: string;
+};
+
 class OrganizerClass {
   awaiting: AwaitingClass;
 
@@ -216,14 +225,29 @@ class OrganizerClass {
     return false;
   }
 
-  async update(folderData: Task & Project): Promise<void> {
-    // if (folderData.type === "project" || folderData.type === "module") {
-    //   await this.project.updateProject(folderData);
-    // } else if (folderData.type === "awaiting") {
-    //   await this.awaiting.updateTask(folderData);
-    // } else {
-    // await this.organizedTask.updateTask(folderData);
-    // }
+  async update(folderData: FolderDataRequestObj): Promise<void> {
+    if (!(await this.validateId(folderData._id))) {
+      const err = {
+        code: "404",
+        message: "ID invalid",
+      };
+      throw err;
+    }
+
+    if (
+      folderData.type === "project" ||
+      folderData.type === "project-task" ||
+      folderData.type === "module" ||
+      folderData.type === "module-task"
+    ) {
+      await this.project.updateProject(folderData);
+    } else if (folderData.type === "waiting") {
+      await this.awaiting.updateTask(folderData);
+    } else if (folderData.type === "later") {
+      await this.later.updateTask(folderData);
+    } else {
+      await this.organizedTask.updateTask(folderData);
+    }
   }
 }
 

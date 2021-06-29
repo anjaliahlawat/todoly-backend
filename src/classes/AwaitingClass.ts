@@ -85,14 +85,48 @@ class AwaitingClass {
     return finalTasks;
   }
 
-  async updateTask(task: AwaitingRequestObj): Promise<WaitingTask> {
-    const updatedTask = await WaitingListModel.findByIdAndUpdate(
-      { _id: task._id },
-      {
-        reason: task.reason,
+  async updateTask(task: {
+    _id: string;
+    reason: string;
+    desc: string;
+    finishDate: Date;
+  }): Promise<WaitingTask> {
+    let awaitingTask;
+    if (task.reason) {
+      awaitingTask = await WaitingListModel.findByIdAndUpdate(
+        { _id: task._id },
+        {
+          reason: task.reason,
+        }
+      );
+    }
+
+    if (task.finishDate) {
+      if (!isValidDate(task.finishDate)) {
+        const err = {
+          code: "400",
+          message: "Invalid Date",
+        };
+        throw err;
       }
-    );
-    return updatedTask;
+
+      awaitingTask = await WaitingListModel.findByIdAndUpdate(
+        { _id: task._id },
+        {
+          date: task.finishDate,
+        }
+      );
+    }
+
+    if (task.desc) {
+      awaitingTask = await WaitingListModel.findById(task._id);
+      const updatedTask = {
+        _id: awaitingTask.task.toString(),
+        desc: task.desc,
+      };
+      await this.task.updateTask(updatedTask);
+    }
+    return awaitingTask;
   }
 }
 

@@ -23,8 +23,9 @@ class ModuleClass {
     return moduleObj[0];
   }
 
-  private async getModule(name): Promise<Array<Module>> {
-    return ModuleModel.find({ name });
+  async addTaskToModule(module: Module, task: OrganizedTask): Promise<void> {
+    const moduleTask = new ModuleTaskModel({ task, module });
+    await moduleTask.save();
   }
 
   private async createModule(
@@ -38,9 +39,8 @@ class ModuleClass {
     return moduleObj.save();
   }
 
-  async addTaskToModule(module: Module, task: OrganizedTask): Promise<void> {
-    const moduleTask = new ModuleTaskModel({ task, module });
-    await moduleTask.save();
+  private async getModule(name): Promise<Array<Module>> {
+    return ModuleModel.find({ name });
   }
 
   async deleteModules(ids: Array<string>): Promise<void> {
@@ -70,6 +70,19 @@ class ModuleClass {
   async getModuleTasks(module: string): Promise<Array<ModuleTask>> {
     const moduletasks = await ModuleTaskModel.find({ module });
     return moduletasks;
+  }
+
+  async updateModuleTask(data: {
+    _id: string;
+    desc?: string;
+    finishDate?: Date;
+  }): Promise<ModuleTask> {
+    const updatedData = await ModuleTaskModel.findById(data._id);
+    await this.organizedTask.updateTask({
+      ...data,
+      _id: updatedData.task.toString(),
+    });
+    return updatedData;
   }
 }
 

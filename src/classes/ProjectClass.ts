@@ -9,6 +9,7 @@ import TaskClass from "./TaskClass";
 import { User } from "../models/users";
 import { OrganizedTask } from "../models/organizedTask";
 import OrganizedTaskClass from "./OrganizedTaskClass";
+import { ModuleTask } from "../models/module-task";
 
 class ProjectClass {
   module: ModuleClass;
@@ -155,23 +156,45 @@ class ProjectClass {
     return tasks;
   }
 
-  async updateProject(data: Project & Module): Promise<Project | Module> {
-    let updatedData: Project | Module;
-    // if (data.type === "project") {
-    //   updatedData = await ProjectModel.findByIdAndUpdate(
-    //     { _id: data._id },
-    //     {
-    //       name: data.name,
-    //     }
-    //   );
-    // } else if (data.type === "module") {
-    //   updatedData = await ModuleModel.findByIdAndUpdate(
-    //     { _id: data._id },
-    //     {
-    //       name: data.name,
-    //     }
-    //   );
-    // }
+  async updateProject(data: {
+    _id: string;
+    type: string;
+    name?: string;
+    desc?: string;
+  }): Promise<Project | Module | ProjectTask | ModuleTask> {
+    let updatedData: Project | Module | ProjectTask | ModuleTask;
+    if (data.type === "project") {
+      updatedData = await ProjectModel.findByIdAndUpdate(
+        { _id: data._id },
+        {
+          name: data.name,
+        }
+      );
+    } else if (data.type === "project-task") {
+      updatedData = await this.updateProjectTask(data);
+    } else if (data.type === "module") {
+      updatedData = await ModuleModel.findByIdAndUpdate(
+        { _id: data._id },
+        {
+          name: data.name,
+        }
+      );
+    } else {
+      updatedData = await this.module.updateModuleTask(data);
+    }
+    return updatedData;
+  }
+
+  async updateProjectTask(data: {
+    _id: string;
+    desc?: string;
+    finishDate?: Date;
+  }): Promise<ProjectTask> {
+    const updatedData = await ProjectTaskModel.findById(data._id);
+    await this.organizedTask.updateTask({
+      ...data,
+      _id: updatedData.task.toString(),
+    });
     return updatedData;
   }
 }

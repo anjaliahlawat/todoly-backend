@@ -57,6 +57,22 @@ class LaterClass {
     }
     return finalTasks;
   }
+
+  async updateTask({
+    _id,
+    desc,
+  }: {
+    _id: string;
+    desc: string;
+  }): Promise<LaterTask> {
+    const laterTask = await LaterTasksModel.findById(_id);
+    const updatedTask = {
+      _id: laterTask.task.toString(),
+      desc,
+    };
+    await this.task.updateTask(updatedTask);
+    return laterTask;
+  }
 }
 
 export default LaterClass;

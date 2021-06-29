@@ -26,7 +26,7 @@ const organizedTaskSchema = new Schema({
     type: String,
     default: "To do",
   },
-  finish_date: {
+  finishDate: {
     type: Date,
     required: true,
   },

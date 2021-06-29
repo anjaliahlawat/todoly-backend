@@ -43,11 +43,14 @@ class TaskClass {
     return TaskModel.findById(_id);
   }
 
-  async updateTask(task: Task): Promise<Task> {
-    const updatedTask = await TaskModel.findByIdAndUpdate(
-      { _id: task._id },
-      { desc: task.desc }
-    );
+  async updateTask({
+    _id,
+    desc,
+  }: {
+    _id: string;
+    desc: string;
+  }): Promise<Task> {
+    const updatedTask = await TaskModel.findByIdAndUpdate({ _id }, { desc });
     return updatedTask;
   }
 }

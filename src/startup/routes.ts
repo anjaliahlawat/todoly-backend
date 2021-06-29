@@ -7,7 +7,7 @@ import * as users from "../routes/users";
 import error from "../middleware/error";
 
 const configRoutes = (app): void => {
-  app.use(function (req, res, next) {
+  app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
       "Access-Control-Allow-Headers",

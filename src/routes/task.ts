@@ -103,4 +103,13 @@ router.post(
   })
 );
 
+// TO DO - move api
+// router.post(
+//   "/folder/move",
+//   auth,
+//   asyncMiddleware(async (req: Request, res: Response): Promise<void> => {
+
+//   })
+// );
+
 module.exports = router;

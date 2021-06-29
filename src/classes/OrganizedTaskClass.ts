@@ -71,6 +71,10 @@ class OrganizedTaskClass {
     return finalTasks;
   }
 
+  async getTaskDetails(_id: string): Promise<OrganizedTask> {
+    return OrganizedTaskModel.findById(_id);
+  }
+
   private async getTaskFromDB(
     tasks: Array<Task>
   ): Promise<Array<OrganizedTask>> {
@@ -82,20 +86,41 @@ class OrganizedTaskClass {
     return organizedTasks;
   }
 
-  async updateTask(task: OrganizedTask & Task): Promise<OrganizedTask> {
-    if (!isValidDate(task.finishDate)) {
-      const err = {
-        code: "400",
-        message: "Invalid date",
-      };
-      throw err;
-    }
-    const updatedTask = await OrganizedTaskModel.findByIdAndUpdate(
-      { _id: task._id },
-      {
-        finish_date: task.finishDate,
+  // async updatePath() {
+
+  // }
+
+  async updateTask(task: {
+    _id: string;
+    desc?: string;
+    finishDate?: Date;
+  }): Promise<Task | OrganizedTask> {
+    let updatedTask: OrganizedTask;
+    if (task.finishDate) {
+      if (!isValidDate(task.finishDate)) {
+        const err = {
+          code: "400",
+          message: "Invalid date",
+        };
+        throw err;
       }
-    );
+      updatedTask = await OrganizedTaskModel.findByIdAndUpdate(
+        { _id: task._id },
+        {
+          finish_date: task.finishDate,
+        }
+      );
+    }
+
+    if (task.desc) {
+      updatedTask = await OrganizedTaskModel.findById(task._id);
+      const newTask = {
+        _id: updatedTask.task.toString(),
+        desc: task.desc,
+      };
+
+      await this.task.updateTask(newTask);
+    }
     return updatedTask;
   }
 }

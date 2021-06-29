@@ -1,10 +1,10 @@
 import * as request from "supertest";
 
 import * as assets from "../../../assets/qa.json";
-import server from "../../../src/index";
 import { CapturedTaskModel } from "../../../src/models/captured";
 import { TaskModel } from "../../../src/models/task";
 import { UserModel } from "../../../src/models/users";
+import server from "../../../src/index";
 
 describe("/api/capture-task", () => {
   let token: string;
