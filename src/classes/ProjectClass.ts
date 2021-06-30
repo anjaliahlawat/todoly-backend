@@ -60,7 +60,7 @@ class ProjectClass {
     } else if (type === "module") {
       await this.module.deleteModules(ids);
     } else if (type === "module-task") {
-      // await this.deleteProjectTasks(ids);
+      await this.module.deleteModuleTasks(ids);
     }
   }
 
@@ -71,10 +71,7 @@ class ProjectClass {
   async deleteProjectTasks(ids: Array<string>): Promise<void> {
     for (let i = 0; i < ids.length; i += 1) {
       const projectTask = await ProjectTaskModel.findByIdAndRemove(ids[i]);
-      await this.task.delete(projectTask.task.toString());
-      await this.organizedTask.findByTaskIdAndDeleteTask(
-        projectTask.task.toString()
-      );
+      await this.organizedTask.deleteTasks([projectTask.task.toString()]);
     }
   }
 
@@ -82,10 +79,7 @@ class ProjectClass {
     const projectTasks = await ProjectTaskModel.find({ project: projectId });
     for (let i = 0; i < projectTasks.length; i += 1) {
       await ProjectTaskModel.findByIdAndRemove(projectTasks[i]._id);
-      await this.task.delete(projectTasks[i].task.toString());
-      await this.organizedTask.findByTaskIdAndDeleteTask(
-        projectTasks[i].task.toString()
-      );
+      await this.organizedTask.deleteTasks([projectTasks[i].task.toString()]);
     }
   }
 

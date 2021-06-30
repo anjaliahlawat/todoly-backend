@@ -57,7 +57,30 @@
                     ]
                 }
             ],
-            "tasks": []
+            "tasks": [
+                {
+                    "desc": "Create matlab account",
+                    "type": "text"
+                }
+            ]
+        }
+    ],
+    "simpleTask": [
+        "Read about income tax",
+        "Call immigration dept"
+    ],
+    "laterTask": [
+        "Plan trip with friends",
+        "Buy sunglasses"
+    ],
+    "awaitingTask": [
+        {
+            "desc": "Book flight tickets",
+            "reason": "waiting for visa approval"
+        },
+        {
+            "desc": "Plan Nainitaal trip",
+            "reason": "waiting for a friend decision"
         }
     ]
 }

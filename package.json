@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll --verbose",
-    "test:only": "./node_modules/.bin/jest tests/integration/routes/organizedTask/edit.test.ts",
+    "test:only": "./node_modules/.bin/jest tests/integration/routes/organizedTask/delete.test.ts",
     "start": "tsc && nodemon --config nodemon.json build/src/index.js",
     "start:test": "NODE_ENV=test tsc && nodemon --config nodemon.json build/index.js",
     "lint": "./node_modules/.bin/eslint .",

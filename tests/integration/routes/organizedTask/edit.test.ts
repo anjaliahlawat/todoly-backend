@@ -14,6 +14,7 @@ import server from "../../../../src/index";
 import { TaskModel } from "../../../../src/models/task";
 import { UserModel } from "../../../../src/models/users";
 import { WaitingListModel } from "../../../../src/models/waitingList";
+import createPath from "../../../../src/util/helper";
 
 describe("Organize task Api / Add", () => {
   let token: string;
@@ -281,12 +282,6 @@ describe("Organize task Api / Add", () => {
     let projectOrgTask;
     let task1;
     let task2;
-
-    const createPath = (folder1, folder2) => {
-      const path1 = folder1.toLowerCase().split(" ").join("-");
-      const path2 = folder2.toLowerCase().split(" ").join("-");
-      return `${path1}/${path2}`;
-    };
 
     beforeEach(async () => {
       token = new UserModel().getAuthToken();

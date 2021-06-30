@@ -52,10 +52,14 @@ class ModuleClass {
 
   async deleteModuleTask(id: string): Promise<void> {
     const moduleTask = await ModuleTaskModel.findOneAndRemove({ module: id });
-    await this.task.delete(moduleTask.task.toString());
-    await this.organizedTask.findByTaskIdAndDeleteTask(
-      moduleTask.task.toString()
-    );
+    await this.organizedTask.deleteTasks([moduleTask.task.toString()]);
+  }
+
+  async deleteModuleTasks(ids: Array<string>): Promise<void> {
+    for (let i = 0; i < ids.length; i += 1) {
+      const moduleTask = await ModuleTaskModel.findByIdAndRemove(ids[i]);
+      await this.organizedTask.deleteTasks([moduleTask.task.toString()]);
+    }
   }
 
   async findByProjectIdAndDelete(projectId: string): Promise<void> {

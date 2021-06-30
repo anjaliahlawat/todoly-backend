@@ -111,13 +111,24 @@ class OrganizerClass {
     ids: Array<string>;
     type: string;
   }): Promise<void> {
+    for (let i = 0; i < folderData.ids.length; i += 1) {
+      if (!(await this.validateId(folderData.ids[0]))) {
+        const err = {
+          code: "404",
+          message: "ID invalid",
+        };
+        throw err;
+      }
+    }
+
     if (
       folderData.type === "project" ||
       folderData.type === "module" ||
-      folderData.type === "project-task"
+      folderData.type === "project-task" ||
+      folderData.type === "module-task"
     ) {
       await this.project.delete(folderData.ids, folderData.type);
-    } else if (folderData.type === "awaiting") {
+    } else if (folderData.type === "waiting") {
       await this.awaiting.delete(folderData.ids);
     } else if (folderData.type === "later") {
       await this.later.delete(folderData.ids);
