@@ -121,7 +121,6 @@ class ProjectClass {
   }
 
   async getProjectFolders(
-    user: User,
     projectId: string
   ): Promise<Array<Module> | Array<Task>> {
     const projectDetails = [];
@@ -133,9 +132,8 @@ class ProjectClass {
       total: projectTasks,
     });
     for (let i = 0; i < modules.length; i += 1) {
-      const moduleTasks = await (
-        await this.module.getModuleTasks(modules[i]._id)
-      ).length;
+      const moduleTasks = (await this.module.getModuleTasks(modules[i]._id))
+        .length;
       projectDetails.push({
         name: modules[i].name,
         subtitle: `${moduleTasks} tasks`,
@@ -148,6 +146,19 @@ class ProjectClass {
   async getProjectTasks(project: string): Promise<Array<ProjectTask>> {
     const tasks = await ProjectTaskModel.find({ project });
     return tasks;
+  }
+
+  async getProjectTasksWithDetails(
+    project: string
+  ): Promise<Array<ProjectTask>> {
+    const projectTasksDetails = [];
+    const projectTasks = await ProjectTaskModel.find({ project });
+    for (let i = 0; i < projectTasks.length; i += 1) {
+      projectTasksDetails.push(
+        await this.organizedTask.getTaskDetails(projectTasks[i].task.toString())
+      );
+    }
+    return projectTasksDetails;
   }
 
   async updateProject(data: {

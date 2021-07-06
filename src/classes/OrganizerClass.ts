@@ -171,7 +171,7 @@ class OrganizerClass {
     folder: string
   ): Promise<Array<Task> | Array<Project>> {
     let folderData;
-    if (folder === "simple-tasks") {
+    if (folder === "simple-task") {
       folderData = await this.organizedTask.getTasks(user);
     }
     if (folder === "later") {
@@ -187,13 +187,17 @@ class OrganizerClass {
   }
 
   async getFoldersOfFolder(
-    user: User,
     folder: string,
-    folderId: string
+    folderId: string,
+    folderName: string
   ): Promise<Array<Task> | Array<Module>> {
     let folderData;
-    if (folder === "project") {
-      folderData = await this.project.getProjectFolders(user, folderId);
+    if (folder === "project" && folderName === "project-task") {
+      folderData = await this.project.getProjectTasksWithDetails(folderId);
+    } else if (folder === "project") {
+      folderData = await this.project.getProjectFolders(folderId);
+    } else if (folder === "module") {
+      folderData = await this.module.getModuleDetails(folderId);
     }
     return folderData;
   }

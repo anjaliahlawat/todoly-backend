@@ -62,12 +62,11 @@ router.post(
   "/folders/:folder/:folderName",
   auth,
   asyncMiddleware(async (req: Request, res: Response): Promise<void> => {
-    const { email, folderId } = req.body;
-    const user = await userObj.getUserId(email);
+    const { folderId } = req.body;
     const folderData = await organizerObj.getFoldersOfFolder(
-      user,
       req.params.folder,
-      folderId
+      folderId,
+      req.params.folderName
     );
     const response = {
       result: "success",
