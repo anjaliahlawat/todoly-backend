@@ -19,18 +19,16 @@ import {
 } from "../../../../assets/qa.json";
 import createPath from "../../../../src/util/helper";
 
-describe("Organize task Api / Get Folders", () => {
+describe("Organize task Api / Move Folders/Files", () => {
   let token: string;
   let user: string;
   let project: any;
   let module: any;
+  let orgTask1: any;
+  let awaitingTask1: any;
 
   const url = "/api/organize";
   const email = "anjali@gmail.com";
-
-  const formData = {
-    email,
-  };
 
   beforeAll(async () => {
     token = new UserModel().getAuthToken();
@@ -43,12 +41,12 @@ describe("Organize task Api / Get Folders", () => {
     let task2 = new TaskModel({ desc: simpleTask[1], type: "text", user });
     task2 = await task2.save();
 
-    const orgTask1 = new OrganizedTaskModel({
+    orgTask1 = new OrganizedTaskModel({
       task: task1._id,
       path: "simple-task",
       finishDate: addDaysToCurrentDate(3),
     });
-    await orgTask1.save();
+    orgTask1 = await orgTask1.save();
 
     const orgTask2 = new OrganizedTaskModel({
       task: task2._id,
@@ -91,13 +89,13 @@ describe("Organize task Api / Get Folders", () => {
     });
     task6 = await task6.save();
 
-    const awaitingTask1 = new WaitingListModel({
+    awaitingTask1 = new WaitingListModel({
       task: task5._id,
       reason: awaitingTask[0].reason,
       date: addDaysToCurrentDate(3),
       user,
     });
-    await awaitingTask1.save();
+    awaitingTask1 = await awaitingTask1.save();
 
     const awaitingTask2 = new WaitingListModel({
       task: task6._id,
@@ -173,122 +171,98 @@ describe("Organize task Api / Get Folders", () => {
     await WaitingListModel.remove({});
   });
 
-  it("should get all the base folders", async () => {
+  it("should move simple-task to later", async () => {
+    const formData = {
+      email,
+      from: "simple-task",
+      folderId: orgTask1._id,
+      to: "later",
+    };
+
     const res = await request(server)
-      .post(`${url}/folders`)
+      .post(`${url}/folder/move`)
       .set("x-auth-token", token)
       .send(formData);
     expect(res.status).toBe(200);
     expect(res.body.result).toBe("success");
-    expect(res.body.folders).toHaveLength(4);
-    expect(res.body.folders).toEqual([
-      { title: "Simple tasks", subtitle: "2 tasks", total: 2 },
-      { title: "Projects", subtitle: "1 projects", total: 1 },
-      { title: "Waiting", subtitle: "2 awaiting", total: 2 },
-      { title: "Later", subtitle: "2 tasks", total: 2 },
-    ]);
+
+    const orgTask = await OrganizedTaskModel.findById(orgTask1._id);
+    expect(orgTask).toBe(null);
+
+    const task = await LaterTasksModel.find({ task: orgTask1.task });
+    expect(task).toHaveLength(1);
   });
 
-  it("should get the simple tasks inside base folders", async () => {
+  it("should move awaiting to later", async () => {
+    const formData = {
+      email,
+      from: "awaiting",
+      folderId: awaitingTask1._id,
+      to: "later",
+    };
+
     const res = await request(server)
-      .post(`${url}/folders/simple-task`)
+      .post(`${url}/folder/move`)
       .set("x-auth-token", token)
       .send(formData);
     expect(res.status).toBe(200);
     expect(res.body.result).toBe("success");
-    expect(res.body.folderData).toHaveLength(2);
-    expect(res.body.folderData[0].desc).toBe(simpleTask[0]);
-    expect(res.body.folderData[0]._id).not.toBeNull();
-    expect(res.body.folderData[1].desc).toBe(simpleTask[1]);
-    expect(res.body.folderData[1]._id).not.toBeNull();
+
+    const waitingTask = await WaitingListModel.findById(awaitingTask1._id);
+    expect(waitingTask).toBe(null);
+
+    const task = await LaterTasksModel.find({ task: awaitingTask1.task });
+    expect(task).toHaveLength(1);
   });
 
-  it("should get the later tasks inside base folders", async () => {
-    const res = await request(server)
-      .post(`${url}/folders/later`)
-      .set("x-auth-token", token)
-      .send(formData);
-    expect(res.status).toBe(200);
-    expect(res.body.result).toBe("success");
-    expect(res.body.folderData).toHaveLength(2);
-    expect(res.body.folderData[0].desc).toBe(laterTask[0]);
-    expect(res.body.folderData[0]._id).not.toBeNull();
-    expect(res.body.folderData[1].desc).toBe(laterTask[1]);
-    expect(res.body.folderData[1]._id).not.toBeNull();
-  });
-
-  it("should get the awaiting tasks inside base folders", async () => {
-    const res = await request(server)
-      .post(`${url}/folders/awaiting`)
-      .set("x-auth-token", token)
-      .send(formData);
-    expect(res.status).toBe(200);
-    expect(res.body.result).toBe("success");
-    expect(res.body.folderData).toHaveLength(2);
-    expect(res.body.folderData[0].desc).toBe(awaitingTask[0].desc);
-    expect(res.body.folderData[0]._id).not.toBeNull();
-    expect(res.body.folderData[1].desc).toBe(awaitingTask[1].desc);
-    expect(res.body.folderData[1]._id).not.toBeNull();
-  });
-
-  it("should get the projects inside base folders", async () => {
-    const res = await request(server)
-      .post(`${url}/folders/project`)
-      .set("x-auth-token", token)
-      .send(formData);
-    expect(res.status).toBe(200);
-    expect(res.body.result).toBe("success");
-    expect(res.body.folderData).toHaveLength(1);
-    expect(res.body.folderData[0].name).toBe(projects[1].name);
-    expect(res.body.folderData[0]._id).not.toBeNull();
-    expect(res.body.folderData[0].modules).toBe(1);
-    expect(res.body.folderData[0].tasks).toBe(1);
-  });
-
-  it("should get the project data", async () => {
-    const projectFormData = {
+  it("should move project to later", async () => {
+    const formData = {
+      email,
+      from: "project",
       folderId: project._id,
+      to: "later",
     };
+
     const res = await request(server)
-      .post(`${url}/folders/project/${projects[1].name}`)
+      .post(`${url}/folder/move`)
       .set("x-auth-token", token)
-      .send(projectFormData);
+      .send(formData);
     expect(res.status).toBe(200);
     expect(res.body.result).toBe("success");
-    expect(res.body.folderData).toHaveLength(2);
-    expect(res.body.folderData[0].total).toBe(1);
-    expect(res.body.folderData[1].total).toBe(1);
+
+    const movedProject = await ProjectModel.findById(project._id);
+    expect(movedProject.isLater).toBe(true);
+
+    const projectTasks = await ProjectTaskModel.find({ project: project._id });
+    expect(projectTasks).toHaveLength(0);
+
+    const modules = await ModuleModel.find({ project: project._id });
+    expect(modules).toHaveLength(0);
+
+    const moduleTasks = await ModuleTaskModel.find({ module: module._id });
+    expect(moduleTasks).toHaveLength(0);
+
+    const later = await LaterTasksModel.find({ project: project._id });
+    expect(later).toHaveLength(1);
   });
 
-  it("should get the module data", async () => {
-    const moduleFormData = {
-      folderId: module._id,
-    };
-    const res = await request(server)
-      .post(`${url}/folders/module/${projects[1].modules[0].name}`)
-      .set("x-auth-token", token)
-      .send(moduleFormData);
-    expect(res.status).toBe(200);
-    expect(res.body.result).toBe("success");
-    expect(res.body.folderData).toHaveLength(1);
-    expect(res.body.folderData[0].task).not.toBeNull();
-    expect(res.body.folderData[0]._id).not.toBeNull();
-    expect(res.body.folderData[0].task._id).not.toBeNull();
-  });
+  // it("should move module to later", async () => {
 
-  it("should get the project tasks data (All Task folder)", async () => {
-    const projectFormData = {
-      folderId: project._id,
-    };
-    const res = await request(server)
-      .post(`${url}/folders/project/project-task`)
-      .set("x-auth-token", token)
-      .send(projectFormData);
-    expect(res.status).toBe(200);
-    expect(res.body.result).toBe("success");
-    expect(res.body.folderData).toHaveLength(1);
-    expect(res.body.folderData[0]._id).not.toBeNull();
-    expect(res.body.folderData[0].task).not.toBeNull();
-    expect(res.body.folderData[0].task._id).not.toBeNull();
-  });
+  // });
+
+  // it("should move project-task to later", async () => {
+
+  // });
+
+  // it("should move project-task to awaiting", async () => {
+
+  // });
+
+  // it("should move module-task to later", async () => {
+
+  // });
+
+  // it("should move module-task to awaiting", async () => {
+
+  // });
 });

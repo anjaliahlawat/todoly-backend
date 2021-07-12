@@ -40,6 +40,10 @@ class OrganizedTaskClass {
     }
   }
 
+  async deleteOrgTask(_id: string): Promise<OrganizedTask> {
+    return OrganizedTaskModel.findByIdAndRemove(_id);
+  }
+
   async findByTaskIdAndDeleteTask(id: string): Promise<void> {
     await OrganizedTaskModel.findOneAndRemove({ task: id });
   }

@@ -13,19 +13,15 @@ class LaterClass {
   }
 
   async addTaskInLaterModal(
-    task: Task,
+    task: string,
     user: User,
     from: string
   ): Promise<Task> {
     let laterTaskObj;
-    if (from === "captured") {
-      laterTaskObj = new LaterTasksModel({ task: task._id, user });
-    }
-    if (from === "organized") {
-      laterTaskObj = new LaterTasksModel({ organizedTask: task._id, user });
-    }
-    if (from === "project") {
-      laterTaskObj = new LaterTasksModel({ project: task._id, user });
+    if (from === "captured" || from === "organized" || from === "awaiting") {
+      laterTaskObj = new LaterTasksModel({ task, user });
+    } else if (from === "project") {
+      laterTaskObj = new LaterTasksModel({ project: task, user });
     }
     laterTaskObj = await laterTaskObj.save();
     return pick(laterTaskObj, "_id", "task");

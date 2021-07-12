@@ -60,9 +60,14 @@ class AwaitingClass {
 
   async delete(ids: Array<string>): Promise<void> {
     for (let i = 0; i < ids.length; i += 1) {
-      const task = await WaitingListModel.findByIdAndRemove(ids[i]);
-      await this.task.delete(task.task.toString());
+      await this.deleteTask(ids[i]);
     }
+  }
+
+  async deleteTask(_id: string): Promise<WaitingTask> {
+    const task = await WaitingListModel.findByIdAndRemove(_id);
+    await this.task.delete(task.task.toString());
+    return task;
   }
 
   async getAwaitingTaskCount(user: User): Promise<number> {

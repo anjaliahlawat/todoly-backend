@@ -102,13 +102,18 @@ router.post(
   })
 );
 
-// TO DO - move api
-// router.post(
-//   "/folder/move",
-//   auth,
-//   asyncMiddleware(async (req: Request, res: Response): Promise<void> => {
-
-//   })
-// );
+router.post(
+  "/folder/move",
+  auth,
+  asyncMiddleware(async (req: Request, res: Response): Promise<void> => {
+    const { email, from, folderId, to } = req.body;
+    await organizerObj.setUser(email);
+    await organizerObj.moveFolder(from, folderId, to);
+    const response = {
+      result: "success",
+    };
+    res.send(response);
+  })
+);
 
 module.exports = router;

@@ -161,6 +161,19 @@ class ProjectClass {
     return projectTasksDetails;
   }
 
+  async moveProject(_id: string, to: string): Promise<void> {
+    if (to === "later") {
+      await ProjectModel.findByIdAndUpdate(
+        { _id },
+        {
+          isLater: true,
+        }
+      );
+      await this.findByProjectIdAndDeleteProjectTasks(_id);
+      await this.module.findByProjectIdAndDelete(_id);
+    }
+  }
+
   async updateProject(data: {
     _id: string;
     type: string;

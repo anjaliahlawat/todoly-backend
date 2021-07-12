@@ -14,6 +14,7 @@ import { User } from "../models/users";
 import { Module } from "../models/module";
 import OrganizedTaskClass from "./OrganizedTaskClass";
 import { OrganizedTask } from "../models/organizedTask";
+import UserClass from "./UserClass";
 
 const capturedObj = new CapturedTaskClass();
 
@@ -49,6 +50,8 @@ class OrganizerClass {
   project: ProjectClass;
 
   task: TaskClass;
+
+  user: User;
 
   constructor() {
     this.awaiting = new AwaitingClass();
@@ -202,6 +205,47 @@ class OrganizerClass {
     return folderData;
   }
 
+  async moveFolder(from: string, folderId: string, to: string): Promise<void> {
+    if (from === "simple-task") {
+      await this.moveSimpleTask(folderId, to);
+    } else if (from === "awaiting") {
+      await this.moveAwaitingTask(folderId, to);
+    } else if (from === "project") {
+      await this.moveProject(folderId, to);
+    } else if (from === "module") {
+      // await this.module.moveModule(folderId, to);
+    }
+  }
+
+  async moveAwaitingTask(folderId: string, to: string): Promise<void> {
+    const awaitingTask = await this.awaiting.deleteTask(folderId);
+    if (to === "later") {
+      await this.later.addTaskInLaterModal(
+        awaitingTask.task.toString(),
+        this.user,
+        "awaiting"
+      );
+    }
+  }
+
+  async moveProject(folderId: string, to: string): Promise<void> {
+    if (to === "later") {
+      await this.later.addTaskInLaterModal(folderId, this.user, "project");
+      await this.project.moveProject(folderId, to);
+    }
+  }
+
+  async moveSimpleTask(folderId: string, to: string): Promise<void> {
+    const orgTask = await this.organizedTask.deleteOrgTask(folderId);
+    if (to === "later") {
+      await this.later.addTaskInLaterModal(
+        orgTask.task.toString(),
+        this.user,
+        "organized"
+      );
+    }
+  }
+
   async organizeTask(
     task: TaskRequestObj,
     user: User,
@@ -225,7 +269,7 @@ class OrganizerClass {
       addedTask = await this.addToProject(task.project, to, user);
     }
     if (to.includes("later")) {
-      addedTask = await this.later.addTaskInLaterModal(task, user, from);
+      addedTask = await this.later.addTaskInLaterModal(task._id, user, from);
     }
     if (to.includes("waiting")) {
       addedTask = await this.awaiting.addTaskInWaiting(task, from, user);
@@ -233,6 +277,11 @@ class OrganizerClass {
 
     await this.cleanUp(task, from, to);
     return addedTask;
+  }
+
+  async setUser(email: string): Promise<void> {
+    const userObj = new UserClass();
+    this.user = await userObj.getUserId(email);
   }
 
   async validateId(_id: string): Promise<boolean> {

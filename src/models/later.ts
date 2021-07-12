@@ -4,7 +4,6 @@ type ID = Types.ObjectId;
 interface LaterTask {
   _id: string;
   task: ID;
-  organizedTask: ID;
   project: ID;
   user: ID;
 }
@@ -17,10 +16,6 @@ const laterTasksSchema = new Schema({
   task: {
     type: Schema.Types.ObjectId,
     ref: "Task",
-  },
-  organizedTask: {
-    type: Schema.Types.ObjectId,
-    ref: "OrganizedTask",
   },
   project: {
     type: Schema.Types.ObjectId,
