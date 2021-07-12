@@ -1,8 +1,10 @@
 import { connect as connectMongoDB, set } from "mongoose";
 import { get as getConfigVar } from "config";
 
+const { NODE_ENV } = process.env;
+
 const startDB = (): void => {
-  const db = getConfigVar("test_db");
+  const db = NODE_ENV === "test" ? getConfigVar("test_db") : getConfigVar("db");
   connectMongoDB(db).then(() => console.log(`Connecting to ${db} ....`));
   set("useFindAndModify", false);
 };
