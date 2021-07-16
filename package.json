@@ -7,7 +7,7 @@
     "test": "jest --watchAll --verbose",
     "test:only": "./node_modules/.bin/jest tests/integration/routes/organizedTask/move.test.ts",
     "start:local": "set NODE_ENV=dev && tsc && nodemon --config nodemon.json build/src/index.js",
-    "start:prod": "set NODE_ENV=prod tsc && nodemon --config nodemon.json build/index.js",
+    "start": "set NODE_ENV=prod tsc && nodemon --config nodemon.json build/index.js",
     "start:test": "set NODE_ENV=test tsc && nodemon --config nodemon.json build/index.js",
     "lint": "./node_modules/.bin/eslint .",
     "lint:fix": "./node_modules/.bin/eslint . --fix"
