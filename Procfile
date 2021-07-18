@@ -1,1 +1,1 @@
-web: set NODE_ENV=prod && tsc && node build/index.js
+web: npm run start
