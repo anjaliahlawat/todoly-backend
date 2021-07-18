@@ -1,1 +1,1 @@
-web: set NODE_ENV=prod && node build/index.js
+web: set NODE_ENV=prod && tsc && node build/index.js
