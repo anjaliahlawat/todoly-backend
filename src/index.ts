@@ -3,7 +3,7 @@ import * as express from "express";
 import startDB from "./startup/db";
 import configRoutes from "./startup/routes";
 
-const app = express();
+const app: express.Application = express();
 
 if (!config.get("jwtPrivateKey")) {
   // eslint-disable-next-line no-console
