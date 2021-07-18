@@ -1,0 +1,1 @@
+web: set NODE_ENV=prod && node build/index.js
