@@ -1,4 +1,4 @@
-const createPath = (folder1: string, folder2?: string) => {
+const createPath = (folder1: string, folder2?: string): string => {
   let path: string;
   const path1 = folder1.toLowerCase().split(" ").join("-");
   if (folder2) {

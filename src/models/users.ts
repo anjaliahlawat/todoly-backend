@@ -50,6 +50,7 @@ const userSchema = new Schema({
 });
 
 // added static method to generate jwt token
+// eslint-disable-next-line func-names
 userSchema.methods.getAuthToken = function (): string {
   const token = sign({ _id: this._id }, getConfigVar("jwtPrivateKey"));
   return token;
