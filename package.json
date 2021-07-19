@@ -54,6 +54,7 @@
     "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-prettier": "^3.3.1",
     "husky": "^4.3.8",
+    "nodemon": "^2.0.12",
     "prettier": "^2.2.1"
   },
   "engines": {
