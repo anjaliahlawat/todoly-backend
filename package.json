@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "./node_modules/.bin/eslint .",
     "lint:fix": "./node_modules/.bin/eslint . --fix",
-    "start": "set NODE_ENV=production && tsc && node build/index.js",
+    "postinstall": "tsc",
+    "start": "set NODE_ENV=production && node build/index.js",
     "start:local": "set NODE_ENV=dev && tsc && nodemon build/src/index.js",
     "start:test": "set NODE_ENV=test && tsc && nodemon build/index.js",
     "test": "jest --watchAll --verbose",
