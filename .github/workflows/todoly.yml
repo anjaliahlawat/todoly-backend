@@ -6,6 +6,7 @@ on:
 
 env:
   TODOLY_PRIVATE_KEY: ${{ secrets.TODOLY_PRIVATE_KEY }}
+  TODOLY_DB: ${{ secrets.TODOLY_DB }}
 
 jobs:
   build:
@@ -24,6 +25,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install
       - run: npm run lint
-      - run: mkdir -p build/
-      - run: npm run tsc
+      - run: mkdir -p build
+      - run: npm run tsc --build tsconfig.json
       - run: npm run start
