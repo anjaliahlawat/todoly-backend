@@ -7,7 +7,7 @@ const startDB = (): void => {
   const db = NODE_ENV === "test" ? getConfigVar("test_db") : getConfigVar("db");
   connectMongoDB(db, { useNewUrlParser: true }).then(() =>
     // eslint-disable-next-line no-console
-    console.log(`Connecting to ${db} ....`)
+    console.log(`Connecting to db ....`)
   );
   set("useFindAndModify", false);
 };
