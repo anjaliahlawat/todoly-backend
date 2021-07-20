@@ -26,5 +26,5 @@ jobs:
       - run: npm install
       - run: npm run lint
       - run: mkdir -p build
-      - run: npm run tsc --build tsconfig.json
+      - run: npm run tsc
       - run: npm run start
