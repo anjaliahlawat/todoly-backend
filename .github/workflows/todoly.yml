@@ -24,6 +24,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install
       - run: npm run lint
-      - run: export todoly_jwtPrivateKey=${{ secrets.TODOLY_PRIVATE_KEY }}
       - run: npm run test
       - run: npm run start

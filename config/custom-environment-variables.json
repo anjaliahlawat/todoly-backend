@@ -1,4 +1,4 @@
 {
-    "jwtPrivateKey": "todoly_jwtPrivateKey",
+    "jwtPrivateKey": "TODOLY_PRIVATE_KEY",
     "db": "todoly_db"
 }
