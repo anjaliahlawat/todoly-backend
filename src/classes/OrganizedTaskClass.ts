@@ -1,187 +1,136 @@
 import { pick } from "lodash";
 
-import AwaitingClass from "./AwaitingClass";
-import CapturedTaskClass from "./CapturedClass";
-import Folder from "../interface/folder";
-import ModuleClass from "./ModuleClass";
-import LaterClass from "./LaterClass";
-import Project from "../interface/project";
-import ProjectClass from "./ProjectClass";
-import Task from "../interface/task";
+import { OrganizedTaskModel, OrganizedTask } from "../models/organizedTask";
+import { isValidDate } from "../util/dateFuncs";
 import TaskClass from "./TaskClass";
-import User from "../interface/user";
-import Module from "../interface/module";
-import OrganizedTask from "../modals/organizedTask";
-
-const capturedObj = new CapturedTaskClass();
+import { Task } from "../models/task";
+import { User } from "../models/users";
 
 class OrganizedTaskClass {
   task: TaskClass;
 
-  project: ProjectClass;
-
-  module: ModuleClass;
-
-  later: LaterClass;
-
-  awaiting: AwaitingClass;
-
   constructor() {
     this.task = new TaskClass();
-    this.project = new ProjectClass();
-    this.module = new ModuleClass();
-    this.later = new LaterClass();
-    this.awaiting = new AwaitingClass();
   }
 
-  private async addToProject(project: Project, user: User): Promise<Project> {
-    const projectObj = await this.project.addProject(project, user);
-    const { modules, tasks } = project;
-    if (modules.length > 0) {
-      for (let i = 0; i < modules.length; i += 1) {
-        const moduleObj = await this.module.addModule(modules[i], projectObj);
+  async addTask(
+    task: Task,
+    finishDate: Date | string,
+    path: string
+  ): Promise<OrganizedTask> {
+    if (!finishDate || !isValidDate(finishDate)) {
+      const err = {
+        code: "400",
+        message: "Invalid date",
+      };
+      throw err;
+    }
+    const taskObj = new OrganizedTaskModel({
+      task,
+      path,
+      finish_date: finishDate,
+    });
+    return taskObj.save();
+  }
 
-        const moduleTasks = await this.task.createTask(modules[i].tasks, user);
+  async deleteTasks(ids: Array<string>): Promise<void> {
+    for (let i = 0; i < ids.length; i += 1) {
+      const task = await OrganizedTaskModel.findByIdAndRemove(ids[i]);
+      await this.task.delete(task.task.toString());
+    }
+  }
 
-        for (let j = 0; j < moduleTasks.length; j += 1) {
-          const organizedTaskObj = await this.task.addTaskInOrganizedModal(
-            moduleTasks[j]
-          );
-          await this.module.addTaskToModule(moduleObj, organizedTaskObj);
+  async deleteOrgTask(_id: string): Promise<OrganizedTask> {
+    return OrganizedTaskModel.findByIdAndRemove(_id);
+  }
+
+  async findByTaskIdAndDeleteTask(id: string): Promise<void> {
+    await OrganizedTaskModel.findOneAndRemove({ task: id });
+  }
+
+  async getTasksCount(user: User): Promise<number> {
+    const tasks = await this.task.getAllTasks(user);
+    const count = await OrganizedTaskModel.where({
+      path: /^simple-task/,
+      task: { $in: [...tasks] },
+    }).count();
+    return count;
+  }
+
+  async getTasks(user: User): Promise<Array<Task>> {
+    const tasks = await this.task.getAllTasks(user);
+    const organizedTasks = await this.getTaskFromDB(tasks);
+
+    const finalTasks = [];
+
+    for (let i = 0; i < organizedTasks.length; i += 1) {
+      finalTasks.push({
+        ...pick(
+          await this.task.getTaskDetails(organizedTasks[i].task.toString()),
+          ["desc", "type"]
+        ),
+        ...pick(organizedTasks[i], ["_id", "path", "finish_date", "status"]),
+      });
+    }
+    return finalTasks;
+  }
+
+  async getTaskDetails(_id: string): Promise<OrganizedTask | Task> {
+    const orgTask = await OrganizedTaskModel.findById(_id);
+    const task = await this.task.getTaskDetails(orgTask.task.toString());
+    return {
+      ...pick(orgTask, ["_id", "finishDate", "path", "status"]),
+      task: { ...pick(task, ["_id", "desc"]) },
+    };
+  }
+
+  private async getTaskFromDB(
+    tasks: Array<Task>
+  ): Promise<Array<OrganizedTask>> {
+    const taskIds = tasks.map((task) => task._id.toString());
+    const organizedTasks = await OrganizedTaskModel.find({
+      path: /^simple-task/,
+      task: { $in: [...taskIds] },
+    });
+    return organizedTasks;
+  }
+
+  // async updatePath() {
+
+  // }
+
+  async updateTask(task: {
+    _id: string;
+    desc?: string;
+    finishDate?: Date;
+  }): Promise<Task | OrganizedTask> {
+    let updatedTask: OrganizedTask;
+    if (task.finishDate) {
+      if (!isValidDate(task.finishDate)) {
+        const err = {
+          code: "400",
+          message: "Invalid date",
+        };
+        throw err;
+      }
+      updatedTask = await OrganizedTaskModel.findByIdAndUpdate(
+        { _id: task._id },
+        {
+          finish_date: task.finishDate,
         }
-      }
+      );
     }
 
-    if (tasks.length > 0) {
-      const projectTasks = await this.task.createTask(project.tasks, user);
+    if (task.desc) {
+      updatedTask = await OrganizedTaskModel.findById(task._id);
+      const newTask = {
+        _id: updatedTask.task.toString(),
+        desc: task.desc,
+      };
 
-      for (let i = 0; i < projectTasks.length; i += 1) {
-        const organizedTaskObj = await this.task.addTaskInOrganizedModal(
-          projectTasks[i]
-        );
-        await this.project.addTaskToProject(projectObj, organizedTaskObj);
-      }
+      await this.task.updateTask(newTask);
     }
-
-    return pick(projectObj, "_id", "name");
-  }
-
-  private async cleanUp(task: Task) {
-    if (task.from === "captured") {
-      await capturedObj.deleteTask(task._id);
-    }
-    if (task.to === "project") {
-      await this.task.delete(task._id);
-    }
-  }
-
-  async delete(folderData: {
-    ids: Array<string>;
-    type: string;
-  }): Promise<void> {
-    if (
-      folderData.type === "project" ||
-      folderData.type === "module" ||
-      folderData.type === "project-task"
-    ) {
-      await this.project.delete(folderData.ids, folderData.type);
-    } else if (folderData.type === "awaiting") {
-      await this.awaiting.delete(folderData.ids);
-    } else if (folderData.type === "later") {
-      await this.later.delete(folderData.ids);
-    } else {
-      await this.task.deleteOrganizedTasks(folderData.ids);
-    }
-  }
-
-  async getFolders(user: User): Promise<Array<Folder>> {
-    const simpletasksCount = await this.task.getOrganizedTasksCount(user);
-    const projectCount = await this.project.getProjectCount(user);
-    const waitingTaskCount = await this.awaiting.getAwaitingTaskCount(user);
-    const laterTaskCount = await this.later.getLaterTaskCount(user);
-    const folders = [];
-    folders.push({
-      title: "Simple tasks",
-      subtitle: `${simpletasksCount} tasks`,
-      total: simpletasksCount,
-    });
-    folders.push({
-      title: "Projects",
-      subtitle: `${projectCount} projects`,
-      total: projectCount,
-    });
-    folders.push({
-      title: "Waiting",
-      subtitle: `${waitingTaskCount} awaiting`,
-      total: waitingTaskCount,
-    });
-    folders.push({
-      title: "Later",
-      subtitle: `${laterTaskCount} tasks`,
-      total: laterTaskCount,
-    });
-    return folders;
-  }
-
-  async getFolderData(
-    user: User,
-    folder: string
-  ): Promise<Array<Task> | Array<Project>> {
-    let folderData;
-    if (folder === "simple-tasks") {
-      folderData = await this.task.getOrganizedTasks(user);
-    }
-    if (folder === "later") {
-      folderData = await this.later.getLaterTasks(user);
-    }
-    if (folder === "awaiting") {
-      folderData = await this.awaiting.getAwaitingTasks(user);
-    }
-    if (folder === "project") {
-      folderData = await this.project.getProjects(user);
-    }
-    return folderData;
-  }
-
-  async getFoldersOfFolder(
-    user: User,
-    folder: string,
-    folderId: string
-  ): Promise<Array<Task> | Array<Module>> {
-    let folderData;
-    if (folder === "project") {
-      folderData = await this.project.getProjectFolders(user, folderId);
-    }
-    return folderData;
-  }
-
-  async organizeTask(task: Task, user: User): Promise<Task | Project> {
-    let addedTask;
-    if (task.to === "simple-task") {
-      addedTask = await this.task.addTaskInOrganizedModal(task);
-    }
-    if (task.to === "project") {
-      addedTask = await this.addToProject(task.project, user);
-    }
-    if (task.to === "later") {
-      addedTask = await this.later.addTaskInLaterModal(task, user);
-    }
-    if (task.to === "waiting") {
-      addedTask = await this.awaiting.addTaskInWaiting(task, user);
-    }
-
-    await this.cleanUp(task);
-    return addedTask;
-  }
-
-  async update(folderData: Task & Project): Promise<void> {
-    if (folderData.type === "project" || folderData.type === "module") {
-      await this.project.updateProject(folderData);
-    } else if (folderData.type === "awaiting") {
-      await this.awaiting.updateTask(folderData);
-    } else {
-      await this.task.updateTask(folderData);
-    }
+    return updatedTask;
   }
 }
 

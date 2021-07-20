@@ -1,12 +1,12 @@
 import { pick } from "lodash";
-import CapturedTask from "../modals/captured";
-import Task from "../interface/task";
+import { CapturedTaskModel, CapturedTask } from "../models/captured";
+import { Task } from "../models/task";
 
 class CapturedTaskClass {
   async add(tasks: Array<Task>): Promise<Array<Task>> {
     const savedTasks = [];
     for (let i = 0; i < tasks.length; i += 1) {
-      let capturedTask = new CapturedTask({
+      let capturedTask = new CapturedTaskModel({
         task: tasks[i],
       });
 
@@ -23,7 +23,7 @@ class CapturedTaskClass {
   async getAllTasks(tasks: Array<Task>): Promise<Array<Task>> {
     const capturedTasks = [];
     for (let i = 0; i < tasks.length; i += 1) {
-      const task = await CapturedTask.find({ task: tasks[i]._id });
+      const task = await CapturedTaskModel.find({ task: tasks[i]._id });
       capturedTasks.push({
         ...pick(task, ["date"]),
         ...pick(tasks[i], ["_id", "desc", "type"]),
@@ -33,8 +33,18 @@ class CapturedTaskClass {
     return capturedTasks;
   }
 
-  async deleteTask(taskId: string): Promise<void> {
-    await CapturedTask.findOneAndRemove({ task: taskId });
+  async deleteAll(tasks: Array<Task>): Promise<void> {
+    for (let i = 0; i < tasks.length; i += 1) {
+      await this.delete("task", tasks[i]._id);
+    }
+  }
+
+  async delete(prop: string, taskId: string): Promise<CapturedTask> {
+    return CapturedTaskModel.findOneAndRemove({ [prop]: taskId });
+  }
+
+  async isTaskPresent(_id: string): Promise<CapturedTask> {
+    return CapturedTaskModel.findById(_id);
   }
 }
 

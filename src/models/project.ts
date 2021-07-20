@@ -1,6 +1,21 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Document, Types } from "mongoose";
 import { validate, object as JoiObject, string } from "joi";
-import Project from "../interface/project";
+
+type ID = Types.ObjectId;
+
+interface Project {
+  _id: string;
+  name: string;
+  status: string;
+  isAwaited: boolean;
+  isLater: boolean;
+  date: Date;
+  user: ID;
+}
+
+interface ProjectDoc extends Project, Document {
+  _id: string;
+}
 
 const projectSchema = new Schema({
   name: {
@@ -27,14 +42,14 @@ const projectSchema = new Schema({
   },
 });
 
-const Project = model("Project", projectSchema);
+const ProjectModel = model<ProjectDoc>("Project", projectSchema);
 
 function validateProject(project: Project): JoiObject {
   const schema = {
-    name: string().min(1).max(200).required(),
+    name: string().min(3).max(200).required(),
   };
 
   return validate(project, schema);
 }
 
-export { Project, validateProject };
+export { ProjectModel, Project, validateProject };

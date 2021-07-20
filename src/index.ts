@@ -3,7 +3,7 @@ import * as express from "express";
 import startDB from "./startup/db";
 import configRoutes from "./startup/routes";
 
-const app = express();
+const app: express.Application = express();
 
 if (!config.get("jwtPrivateKey")) {
   // eslint-disable-next-line no-console
@@ -18,4 +18,4 @@ const port = process.env.PORT || 4000;
 // eslint-disable-next-line no-console
 const server = app.listen(port, () => console.log(`running on ${port}`));
 
-module.exports = server;
+export default server;

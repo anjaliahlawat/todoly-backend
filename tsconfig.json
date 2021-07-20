@@ -4,12 +4,13 @@
         "moduleResolution": "node",
         "outDir": "./build",
         "target": "ES2018",
+        "resolveJsonModule": true
     },
     "include": [
-        "src/",
+        "src/", "tests",
     ],
     "exclude": [
-        "node_modules",
-        "webpack.config.js"
+        "node_modules/",
+        "webpack.config.js",
     ]
 }
