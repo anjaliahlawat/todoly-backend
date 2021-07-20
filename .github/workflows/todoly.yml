@@ -27,4 +27,3 @@ jobs:
       - run: npm run lint
       - run: mkdir -p build
       - run: npm run tsc
-      - run: npm run start
