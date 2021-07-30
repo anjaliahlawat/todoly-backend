@@ -25,10 +25,11 @@ class OrganizedTaskClass {
       };
       throw err;
     }
+
     const taskObj = new OrganizedTaskModel({
       task,
       path,
-      finish_date: finishDate,
+      finishDate,
     });
     return taskObj.save();
   }
@@ -48,7 +49,7 @@ class OrganizedTaskClass {
     await OrganizedTaskModel.findOneAndRemove({ task: id });
   }
 
-  async getTasksCount(user: User): Promise<number> {
+  async getTasksCount(user: string): Promise<number> {
     const tasks = await this.task.getAllTasks(user);
     const count = await OrganizedTaskModel.where({
       path: /^simple-task/,
@@ -57,8 +58,8 @@ class OrganizedTaskClass {
     return count;
   }
 
-  async getTasks(user: User): Promise<Array<Task>> {
-    const tasks = await this.task.getAllTasks(user);
+  async getTasks(user: string): Promise<Array<Task>> {
+    const tasks = await this.task.getAllTasks(user.toString());
     const organizedTasks = await this.getTaskFromDB(tasks);
 
     const finalTasks = [];
@@ -69,7 +70,7 @@ class OrganizedTaskClass {
           await this.task.getTaskDetails(organizedTasks[i].task.toString()),
           ["desc", "type"]
         ),
-        ...pick(organizedTasks[i], ["_id", "path", "finish_date", "status"]),
+        ...pick(organizedTasks[i], ["_id", "path", "finishDate", "status"]),
       });
     }
     return finalTasks;
@@ -116,7 +117,7 @@ class OrganizedTaskClass {
       updatedTask = await OrganizedTaskModel.findByIdAndUpdate(
         { _id: task._id },
         {
-          finish_date: task.finishDate,
+          finishDate: task.finishDate,
         }
       );
     }

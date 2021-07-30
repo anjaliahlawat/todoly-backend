@@ -21,18 +21,16 @@ import createPath from "../../../../src/util/helper";
 
 describe("Organize task Api / Move Folders/Files", () => {
   let token: string;
-  let user: string;
   let project: any;
   let module: any;
   let orgTask1: any;
   let awaitingTask1: any;
 
   const url = "/api/organize";
-  const email = "anjali@gmail.com";
+  const user = "60c307e88b487f562811b895";
 
   beforeAll(async () => {
     token = new UserModel().getAuthToken();
-    user = (await UserModel.find({ email }))[0]._id;
 
     // adding simple task
     let task1 = new TaskModel({ desc: simpleTask[0], type: "text", user });
@@ -173,7 +171,9 @@ describe("Organize task Api / Move Folders/Files", () => {
 
   it("should move simple-task to later", async () => {
     const formData = {
-      email,
+      user: {
+        _id: user,
+      },
       from: "simple-task",
       folderId: orgTask1._id,
       to: "later",
@@ -195,7 +195,9 @@ describe("Organize task Api / Move Folders/Files", () => {
 
   it("should move awaiting to later", async () => {
     const formData = {
-      email,
+      user: {
+        _id: user,
+      },
       from: "awaiting",
       folderId: awaitingTask1._id,
       to: "later",
@@ -217,7 +219,9 @@ describe("Organize task Api / Move Folders/Files", () => {
 
   it("should move project to later", async () => {
     const formData = {
-      email,
+      user: {
+        _id: user,
+      },
       from: "project",
       folderId: project._id,
       to: "later",

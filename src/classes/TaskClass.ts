@@ -34,8 +34,8 @@ class TaskClass {
     await TaskModel.findByIdAndRemove(taskId);
   }
 
-  async getAllTasks(user: User): Promise<Array<Task>> {
-    const tasksStoredInDB = await TaskModel.find({ user: user._id });
+  async getAllTasks(user: string): Promise<Array<Task>> {
+    const tasksStoredInDB = await TaskModel.find({ user });
     return tasksStoredInDB;
   }
 

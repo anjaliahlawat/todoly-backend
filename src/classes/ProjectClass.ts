@@ -90,17 +90,17 @@ class ProjectClass {
     return ProjectModel.find({ [prop]: value });
   }
 
-  async getAllProjects(user: User): Promise<Array<Project>> {
-    const projects = await ProjectModel.find({ user: user._id });
+  async getAllProjects(user: string): Promise<Array<Project>> {
+    const projects = await ProjectModel.find({ user });
     return projects;
   }
 
-  async getProjectCount(user: User): Promise<number> {
+  async getProjectCount(user: string): Promise<number> {
     const count = await ProjectModel.where({ user }).count();
     return count;
   }
 
-  async getProjects(user: User): Promise<Array<Project>> {
+  async getProjects(user: string): Promise<Array<Project>> {
     const projects = await this.getAllProjects(user);
     const projectsDetailArr = [];
 

@@ -70,13 +70,13 @@ class AwaitingClass {
     return task;
   }
 
-  async getAwaitingTaskCount(user: User): Promise<number> {
+  async getAwaitingTaskCount(user: string): Promise<number> {
     const count = await WaitingListModel.where({ user }).count();
     return count;
   }
 
-  async getAwaitingTasks(user: User): Promise<Array<Task>> {
-    const waitingtasks = await WaitingListModel.find({ user: user._id });
+  async getAwaitingTasks(user: string): Promise<Array<Task>> {
+    const waitingtasks = await WaitingListModel.find({ user });
     const finalTasks = [];
     for (let i = 0; i < waitingtasks.length; i += 1) {
       finalTasks.push({

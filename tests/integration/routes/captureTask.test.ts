@@ -21,7 +21,9 @@ describe("/api/capture-task", () => {
 
   it("should return 401 if user is not logged in", async () => {
     const formData = {
-      email: "anjali@gmail.com",
+      user: {
+        _id: "60c307e88b487f562811b895",
+      },
       tasks: [
         {
           type: captureTask[1].type,
@@ -38,7 +40,9 @@ describe("/api/capture-task", () => {
 
   it("should return 400 if data is invalid", async () => {
     const formData = {
-      email: "anjali@gmail.com",
+      user: {
+        _id: "60c307e88b487f562811b895",
+      },
       tasks: [
         {
           type: captureTask[1].type,
@@ -55,7 +59,9 @@ describe("/api/capture-task", () => {
 
   it("should save capture task in database", async () => {
     const formData = {
-      email: "anjali@gmail.com",
+      user: {
+        _id: "60c307e88b487f562811b895",
+      },
       tasks: [
         {
           type: captureTask[1].type,
@@ -79,7 +85,9 @@ describe("/api/capture-task", () => {
   it("should delete capture task in database", async () => {
     // add captured task in db
     const formData = {
-      email: "anjali@gmail.com",
+      user: {
+        _id: "60c307e88b487f562811b895",
+      },
       tasks: [
         {
           type: captureTask[1].type,

@@ -1,7 +1,7 @@
 import * as moment from "moment";
 
 const addDaysToCurrentDate = (days: number): Date => {
-  return moment(new Date()).utcOffset("+05:30").add("days", days).toDate();
+  return moment(new Date()).utcOffset("+05:30").add(days, "days").toDate();
 };
 
 const isValidDate = (inputDate: Date | string): boolean => {
@@ -15,7 +15,7 @@ const getTodaysDateInIST = (): Date => {
 };
 
 const subtractDaysFromCurrentDate = (days: number): Date => {
-  return moment(new Date()).utcOffset("+05:30").subtract("days", days).toDate();
+  return moment(new Date()).utcOffset("+05:30").subtract(days, "days").toDate();
 };
 
 export {

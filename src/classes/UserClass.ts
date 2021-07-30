@@ -22,6 +22,10 @@ class UserClass {
     return UserModel.findOne({ email });
   }
 
+  async getUser(_id: string): Promise<User> {
+    return UserModel.findById(_id);
+  }
+
   async loginUser(email: string, password: string): Promise<string> {
     let token: string;
     try {

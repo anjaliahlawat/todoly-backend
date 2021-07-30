@@ -23,14 +23,18 @@ describe("Organize task Api / Add", () => {
   const { captureTask, project, projectPath } = assets;
 
   let formData = {
-    email: "anjali@gmail.com",
+    user: {
+      _id: "60c307e88b487f562811b895",
+    },
     from: "captured",
-    to: "simple-tasks",
+    to: "simple-task",
     task: {},
   };
 
   const formCapturedTask = {
-    email: "anjali@gmail.com",
+    user: {
+      _id: "60c307e88b487f562811b895",
+    },
     tasks: [
       {
         type: captureTask[3].type,

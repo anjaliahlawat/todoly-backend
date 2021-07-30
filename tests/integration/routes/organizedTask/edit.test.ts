@@ -16,7 +16,7 @@ import { UserModel } from "../../../../src/models/users";
 import { WaitingListModel } from "../../../../src/models/waitingList";
 import createPath from "../../../../src/util/helper";
 
-describe("Organize task Api / Add", () => {
+describe("Organize task Api / Edit", () => {
   let token: string;
 
   const url = "/api/organize";

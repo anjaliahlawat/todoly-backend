@@ -140,7 +140,7 @@ class OrganizerClass {
     }
   }
 
-  async getFolders(user: User): Promise<Array<Folder>> {
+  async getFolders(user: string): Promise<Array<Folder>> {
     const simpletasksCount = await this.organizedTask.getTasksCount(user);
     const projectCount = await this.project.getProjectCount(user);
     const waitingTaskCount = await this.awaiting.getAwaitingTaskCount(user);
@@ -170,7 +170,7 @@ class OrganizerClass {
   }
 
   async getFolderData(
-    user: User,
+    user: string,
     folder: string
   ): Promise<Array<Task> | Array<Project>> {
     let folderData;
@@ -279,9 +279,9 @@ class OrganizerClass {
     return addedTask;
   }
 
-  async setUser(email: string): Promise<void> {
+  async setUser(userId: string): Promise<void> {
     const userObj = new UserClass();
-    this.user = await userObj.getUserId(email);
+    this.user = await userObj.getUser(userId);
   }
 
   async validateId(_id: string): Promise<boolean> {

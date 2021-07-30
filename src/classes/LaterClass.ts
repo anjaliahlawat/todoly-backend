@@ -34,13 +34,13 @@ class LaterClass {
     }
   }
 
-  async getLaterTaskCount(user: User): Promise<number> {
+  async getLaterTaskCount(user: string): Promise<number> {
     const count = await LaterTasksModel.where({ user }).count();
     return count;
   }
 
-  async getLaterTasks(user: User): Promise<Array<Task>> {
-    const laterTasks = await LaterTasksModel.find({ user: user._id });
+  async getLaterTasks(user: string): Promise<Array<Task>> {
+    const laterTasks = await LaterTasksModel.find({ user });
 
     const finalTasks = [];
     for (let i = 0; i < laterTasks.length; i += 1) {

@@ -21,20 +21,20 @@ import createPath from "../../../../src/util/helper";
 
 describe("Organize task Api / Get Folders", () => {
   let token: string;
-  let user: string;
   let project: any;
   let module: any;
 
   const url = "/api/organize";
-  const email = "anjali@gmail.com";
+  const user = "60c307e88b487f562811b895";
 
   const formData = {
-    email,
+    user: {
+      _id: user,
+    },
   };
 
   beforeAll(async () => {
     token = new UserModel().getAuthToken();
-    user = (await UserModel.find({ email }))[0]._id;
 
     // adding simple task
     let task1 = new TaskModel({ desc: simpleTask[0], type: "text", user });
