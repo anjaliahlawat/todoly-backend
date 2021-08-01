@@ -3,7 +3,6 @@ import { Request, Response, Router } from "express";
 import asyncMiddleware from "../middleware/async";
 import auth from "../middleware/auth";
 import OrganizerClass from "../classes/OrganizerClass";
-import UserClass from "../classes/UserClass";
 
 const router = Router();
 
