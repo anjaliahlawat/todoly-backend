@@ -11,7 +11,7 @@
     "start:local": "set NODE_ENV=dev && tsc && nodemon build/src/index.js",
     "start:test": "set NODE_ENV=test && tsc && nodemon build/src/index.js",
     "test": "jest --watchAll --verbose",
-    "test:only": "./node_modules/.bin/jest tests/integration/routes/organizedTask/add.test.ts",
+    "test:only": "./node_modules/.bin/jest tests/integration/routes/organizedTask/ --detectOpenHandles",
     "tsc": "tsc"
   },
   "husky": {

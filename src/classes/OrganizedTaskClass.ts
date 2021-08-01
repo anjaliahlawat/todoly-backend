@@ -4,7 +4,6 @@ import { OrganizedTaskModel, OrganizedTask } from "../models/organizedTask";
 import { isValidDate } from "../util/dateFuncs";
 import TaskClass from "./TaskClass";
 import { Task } from "../models/task";
-import { User } from "../models/users";
 
 class OrganizedTaskClass {
   task: TaskClass;

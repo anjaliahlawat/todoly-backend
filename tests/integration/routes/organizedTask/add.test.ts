@@ -311,6 +311,7 @@ describe("Organize task Api / Add", () => {
               ],
             },
           ],
+          tasks: [],
         },
       },
     };
