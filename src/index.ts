@@ -1,5 +1,6 @@
 import * as config from "config";
 import * as express from "express";
+
 import startDB from "./startup/db";
 import configRoutes from "./startup/routes";
 
