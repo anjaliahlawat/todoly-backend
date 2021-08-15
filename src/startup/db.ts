@@ -6,9 +6,9 @@ const { NODE_ENV } = process.env;
 const startDB = (): void => {
   let db: string;
   if (NODE_ENV === "dev" || NODE_ENV === "production") {
-    getConfigVar("db");
+    db = getConfigVar("db");
   } else {
-    getConfigVar("test_db");
+    db = getConfigVar("test_db");
   }
   connectMongoDB(db, { useNewUrlParser: true }).then(() =>
     // eslint-disable-next-line no-console
